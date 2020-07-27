@@ -9,12 +9,14 @@
     tools:context=".fragment.ListFragment">
 
    <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/recycler_list_container"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:layout_weight="1"
        android:background="#2F4660" />
 
    <Button
+       android:id="@+id/button_add"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_marginStart="20dp"
@@ -22,6 +24,8 @@
        android:layout_marginEnd="20dp"
        android:layout_marginBottom="10dp"
        android:background="@drawable/bach_create_btn"
-       android:text="Add" />
+       android:text="Add"
+       android:textColor="#FBFBFB"
+       android:textStyle="bold" />
 
 </LinearLayout>
