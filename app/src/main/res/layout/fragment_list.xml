@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2F4660"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".fragment.ListFragment">
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_weight="1"
+       android:background="#2F4660" />
+
+   <Button
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginStart="20dp"
+       android:layout_marginTop="10dp"
+       android:layout_marginEnd="20dp"
+       android:layout_marginBottom="10dp"
+       android:background="@drawable/bach_create_btn"
+       android:text="Add" />
+
+</LinearLayout>
