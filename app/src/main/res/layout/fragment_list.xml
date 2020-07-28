@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#2F4660"
     android:gravity="center_horizontal"
     android:orientation="vertical"
@@ -16,16 +17,17 @@
        android:background="#2F4660" />
 
    <Button
-       android:id="@+id/button_add"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginStart="20dp"
-       android:layout_marginTop="10dp"
-       android:layout_marginEnd="20dp"
-       android:layout_marginBottom="10dp"
-       android:background="@drawable/bach_create_btn"
-       android:text="Add"
-       android:textColor="#FBFBFB"
-       android:textStyle="bold" />
+    android:id="@+id/button_add"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bach_create_btn"
+    android:text="Add"
+    android:textColor="#FBFBFB"
+    android:textStyle="bold" />
+
 
 </LinearLayout>

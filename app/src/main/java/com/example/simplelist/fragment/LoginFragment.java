@@ -9,6 +9,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -58,10 +63,14 @@ public class LoginFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                if (mEditTextName.getText().length()!=0 && mEditTextName.getText().length()!=0){
+                if (mEditTextName.getText().length()!=0 || mEditTextName.getText().length()!=0){
                     Intent intent = ListActivity.newIntent(getActivity(),String.valueOf(mEditTextName.getText()),Integer.parseInt(String.valueOf(mEditTextNumber.getText())));
                     startActivity(intent);
+
                 }else {
+                    Animation animation = new RotateAnimation(1.0f,0.0f);
+                    animation.setDuration(500);
+                    mButtonCreate.startAnimation(animation);
                     mTextViewWrong.setText("please fill the name and number completely");
                 }
             }

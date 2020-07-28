@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="30dp"
         android:text="Wellcome"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
@@ -72,8 +72,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="70dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginStart="200dp"
+        android:layout_marginEnd="200dp"
         android:background="@drawable/bach_create_btn"
         android:text="create"
         android:textColor="#FBFBFB" />
