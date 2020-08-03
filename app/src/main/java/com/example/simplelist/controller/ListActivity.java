@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.simplelist.fragment.ListFragment;
+import com.example.simplelist.model.Task;
+import com.example.simplelist.repository.TaskRepository;
 
 public class ListActivity extends SingleActivity {
 
@@ -20,9 +22,20 @@ public class ListActivity extends SingleActivity {
         intent.putExtra(EXTRA_KEY_LIST_COUNT,count);
         return intent;
     }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        String name =getIntent().getStringExtra(EXTRA_KEY_NAME_STRING);
+        int n = getIntent().getIntExtra(EXTRA_KEY_LIST_COUNT,0);
+        TaskRepository taskRepository = TaskRepository.getInstance(name,n);
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public Fragment createFragment() {
-        return ListFragment.newInstance(getIntent().getIntExtra(EXTRA_KEY_LIST_COUNT,0),getIntent().getStringExtra(EXTRA_KEY_NAME_STRING));
+        return ListFragment.newInstance(getIntent().
+                getIntExtra(EXTRA_KEY_LIST_COUNT,0),getIntent().getStringExtra(EXTRA_KEY_NAME_STRING));
     }
+
+
 }

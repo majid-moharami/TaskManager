@@ -9,8 +9,6 @@ import com.example.simplelist.R;
 
 public abstract class  SingleActivity extends AppCompatActivity {
 
-    public abstract Fragment createFragment();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,4 +20,5 @@ public abstract class  SingleActivity extends AppCompatActivity {
                 .commit();
 
     }
+    public abstract Fragment createFragment();
 }

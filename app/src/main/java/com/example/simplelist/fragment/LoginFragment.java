@@ -66,7 +66,7 @@ public class LoginFragment extends Fragment {
                 if (mEditTextName.getText().length()!=0 || mEditTextName.getText().length()!=0){
                     Intent intent = ListActivity.newIntent(getActivity(),String.valueOf(mEditTextName.getText()),Integer.parseInt(String.valueOf(mEditTextNumber.getText())));
                     startActivity(intent);
-
+                    getActivity().finish();
                 }else {
                     Animation animation = new RotateAnimation(1.0f,0.0f);
                     animation.setDuration(500);
