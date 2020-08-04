@@ -6,6 +6,7 @@
     android:background="@drawable/back_login"
     tools:context=".fragment.LoginFragment">
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

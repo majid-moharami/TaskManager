@@ -32,7 +32,8 @@ public class ListFragment extends Fragment {
     public static final String ARGS_STRING_NAME = "name String";
     private RecyclerView mRecyclerView;
     private Button mButtonAdd;
-
+    private int mCountOfRow=0;
+    private List<Task> mTasksOfTab = new ArrayList<>();
 
     private TaskRepository mTaskRepository = TaskRepository.getInstance();
 
@@ -41,11 +42,10 @@ public class ListFragment extends Fragment {
     }
 
 
-    public static ListFragment newInstance(int count, String name) {
+    public static ListFragment newInstance(int n) {
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_COUNT_INT, count);
-        args.putString(ARGS_STRING_NAME, name);
+        args.putInt(ARGS_COUNT_INT,n);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +68,28 @@ public class ListFragment extends Fragment {
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
+        if (getArguments().getInt(ARGS_COUNT_INT)==0){
+            for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
+                if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO")) {
+                    mTasksOfTab.add(mTaskRepository.getList().get(i));
+                    mCountOfRow++;
+                }
+            }
+        }else if (getArguments().getInt(ARGS_COUNT_INT)==1){
+            for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
+                if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING")) {
+                    mTasksOfTab.add(mTaskRepository.getList().get(i));
+                    mCountOfRow++;
+                }
+            }
+        }else if (getArguments().getInt(ARGS_COUNT_INT)==2){
+            for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
+                if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE")) {
+                    mTasksOfTab.add(mTaskRepository.getList().get(i));
+                    mCountOfRow++;
+                }
+            }
+        }
 
         updateUI();
 
@@ -76,7 +98,7 @@ public class ListFragment extends Fragment {
     }
 
     private void updateUI() {
-        NameAdapter adapter = new NameAdapter(mTaskRepository.getList());
+        NameAdapter adapter = new NameAdapter(mTasksOfTab);
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -87,8 +109,20 @@ public class ListFragment extends Fragment {
                 Animation animation = new AlphaAnimation(1.0f, 0.0f);
                 animation.setDuration(500);
                 mButtonAdd.startAnimation(animation);
+
+
                 Task task = new Task(mTaskRepository.getName());
-                mTaskRepository.insert(task);
+                if (mTasksOfTab.size()!=0)
+                    task.setStats(mTasksOfTab.get(0).getStats());
+                else {
+                    if (getArguments().getInt(ARGS_COUNT_INT,4)==0)
+                        task.setStats(Stats.TODO);
+                    if (getArguments().getInt(ARGS_COUNT_INT,4)==1)
+                        task.setStats(Stats.DOING);
+                    if (getArguments().getInt(ARGS_COUNT_INT,4)==2)
+                        task.setStats(Stats.DONE);
+                }
+                mTasksOfTab.add(task);
                 updateUI();
             }
         });
@@ -144,13 +178,22 @@ public class ListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull NameHolder holder, int position) {
-            Task task = mTaskRepository.get(position);
-            holder.onBind(task);
+            Task task = mTasksOfTab.get(position);
+            if (getArguments().getInt(ARGS_COUNT_INT)==0) {
+                if (task.getStats().toString().equals("TODO"))
+                    holder.onBind(task);
+            }else if (getArguments().getInt(ARGS_COUNT_INT)==1){
+                if (task.getStats().toString().equals("DOING"))
+                    holder.onBind(task);
+            }else if (getArguments().getInt(ARGS_COUNT_INT)==2){
+                if (task.getStats().toString().equals("DONE"))
+                    holder.onBind(task);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mTasks.size();
+            return mTasksOfTab.size();
         }
     }
 }

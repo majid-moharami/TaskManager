@@ -33,8 +33,7 @@ public class ListActivity extends SingleActivity {
 
     @Override
     public Fragment createFragment() {
-        return ListFragment.newInstance(getIntent().
-                getIntExtra(EXTRA_KEY_LIST_COUNT,0),getIntent().getStringExtra(EXTRA_KEY_NAME_STRING));
+        return ListFragment.newInstance(7);
     }
 
 

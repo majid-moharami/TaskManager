@@ -20,6 +20,10 @@ public class Task {
         return mStats;
     }
 
+    public void setStats(Stats stats) {
+        mStats = stats;
+    }
+
     public Task(String name) {
         this.name = name;
         mStats= Stats.randomState();

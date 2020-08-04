@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.simplelist.R;
+import com.example.simplelist.TabListActivity;
 import com.example.simplelist.controller.ListActivity;
 
 
@@ -64,7 +65,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mEditTextName.getText().length()!=0 || mEditTextName.getText().length()!=0){
-                    Intent intent = ListActivity.newIntent(getActivity(),String.valueOf(mEditTextName.getText()),Integer.parseInt(String.valueOf(mEditTextNumber.getText())));
+                    Intent intent = TabListActivity.newIntent(getActivity(),String.valueOf(mEditTextName.getText()),Integer.parseInt(String.valueOf(mEditTextNumber.getText())));
                     startActivity(intent);
                     getActivity().finish();
                 }else {
