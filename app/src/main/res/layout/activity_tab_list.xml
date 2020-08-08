@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3E5871"
     android:orientation="vertical"
-    tools:context=".TabListActivity">
+    tools:context=".controller.TabListActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
-        android:background="#3389B5"
-        app:tabTextColor="#F4F4F4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#3389B5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabTextColor="#F4F4F4" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_tab_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#4C5A68"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:layout_constraintVertical_weight="1" />
+
+
 </LinearLayout>

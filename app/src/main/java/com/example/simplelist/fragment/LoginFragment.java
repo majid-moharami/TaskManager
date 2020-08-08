@@ -9,18 +9,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.simplelist.R;
-import com.example.simplelist.TabListActivity;
-import com.example.simplelist.controller.ListActivity;
+import com.example.simplelist.controller.TabListActivity;
 
 
 public class LoginFragment extends Fragment {
@@ -64,7 +60,7 @@ public class LoginFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                if (mEditTextName.getText().length()!=0 || mEditTextName.getText().length()!=0){
+                if (mEditTextNumber.getText().length()!=0 && mEditTextName.getText().length()!=0){
                     Intent intent = TabListActivity.newIntent(getActivity(),String.valueOf(mEditTextName.getText()),Integer.parseInt(String.valueOf(mEditTextNumber.getText())));
                     startActivity(intent);
                     getActivity().finish();

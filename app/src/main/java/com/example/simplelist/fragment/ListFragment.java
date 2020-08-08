@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,8 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.simplelist.R;
 import com.example.simplelist.Stats;
@@ -29,12 +33,11 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     public static final String ARGS_COUNT_INT = "countInt";
-    public static final String ARGS_STRING_NAME = "name String";
     private RecyclerView mRecyclerView;
     private Button mButtonAdd;
-    private int mCountOfRow=0;
+    private TextView mTextViewWarning;
     private List<Task> mTasksOfTab = new ArrayList<>();
-
+    private CardView mCardView;
     private TaskRepository mTaskRepository = TaskRepository.getInstance();
 
     public ListFragment() {
@@ -62,44 +65,58 @@ public class ListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         findAllView(view);
 
+        orientationDiscriminant();
+
+        fillListOfTab();
+
+        updateUI();
+
+        allListener();
+
+        return view;
+    }
+
+    private void fillListOfTab() {
+
+        List<Task> tasks0 = new ArrayList<>();
+        List<Task> tasks1 = new ArrayList<>();
+        List<Task> tasks2 = new ArrayList<>();
+
+        for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
+            if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO")) {
+                tasks0.add(mTaskRepository.getList().get(i));
+            }
+            if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING")) {
+                tasks1.add(mTaskRepository.getList().get(i));
+            }
+            if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE")) {
+                tasks2.add(mTaskRepository.getList().get(i));
+            }
+        }
+
+        if (getArguments().getInt(ARGS_COUNT_INT)==0) mTasksOfTab.addAll(tasks0);
+        if (getArguments().getInt(ARGS_COUNT_INT)==1) mTasksOfTab.addAll(tasks1);
+        if (getArguments().getInt(ARGS_COUNT_INT)==2) mTasksOfTab.addAll(tasks2);
+    }
+
+    private void orientationDiscriminant() {
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
-        if (getArguments().getInt(ARGS_COUNT_INT)==0){
-            for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
-                if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO")) {
-                    mTasksOfTab.add(mTaskRepository.getList().get(i));
-                    mCountOfRow++;
-                }
-            }
-        }else if (getArguments().getInt(ARGS_COUNT_INT)==1){
-            for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
-                if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING")) {
-                    mTasksOfTab.add(mTaskRepository.getList().get(i));
-                    mCountOfRow++;
-                }
-            }
-        }else if (getArguments().getInt(ARGS_COUNT_INT)==2){
-            for (int i = 0; i <mTaskRepository.getList().size()  ; i++) {
-                if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE")) {
-                    mTasksOfTab.add(mTaskRepository.getList().get(i));
-                    mCountOfRow++;
-                }
-            }
-        }
-
-        updateUI();
-
-        allListener();
-        return view;
     }
 
     private void updateUI() {
+        if (mTasksOfTab.size()==0){
+            mTextViewWarning.setVisibility(View.VISIBLE);
+        }else mTextViewWarning.setVisibility(View.GONE);
         NameAdapter adapter = new NameAdapter(mTasksOfTab);
         mRecyclerView.setAdapter(adapter);
+        int resId = R.anim.layout_animation_fall_down;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(),resId);
+        mRecyclerView.setLayoutAnimation(animation);
     }
 
     private void allListener() {
@@ -123,6 +140,7 @@ public class ListFragment extends Fragment {
                         task.setStats(Stats.DONE);
                 }
                 mTasksOfTab.add(task);
+                mTaskRepository.insert(task);
                 updateUI();
             }
         });
@@ -131,6 +149,8 @@ public class ListFragment extends Fragment {
     private void findAllView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_list_container);
         mButtonAdd = view.findViewById(R.id.button_add);
+        mTextViewWarning=view.findViewById(R.id.warning);
+
     }
 
     private class NameHolder extends RecyclerView.ViewHolder {
@@ -149,7 +169,7 @@ public class ListFragment extends Fragment {
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 if (getAdapterPosition() % 2 == 0) {
-                    itemView.setBackgroundResource(getAdapterPosition() % 4 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
+                    mCardView.setBackgroundColor(getAdapterPosition() % 4 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
                 } else
                     itemView.setBackgroundResource((getAdapterPosition() + 2) % 3 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
             } else {

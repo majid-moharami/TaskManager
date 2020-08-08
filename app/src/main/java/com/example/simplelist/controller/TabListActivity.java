@@ -1,4 +1,4 @@
-package com.example.simplelist;
+package com.example.simplelist.controller;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +11,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.simplelist.controller.ListActivity;
+import com.example.simplelist.R;
 import com.example.simplelist.fragment.ListFragment;
 import com.example.simplelist.repository.TaskRepository;
+import com.example.simplelist.utils.DepthPageTransformer;
+import com.example.simplelist.utils.ZoomOutPageTransformer;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -23,10 +25,11 @@ public class TabListActivity extends AppCompatActivity {
     public static final String EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY = "com.example.nameStringTabList";
     public static final String EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY = "com.example.listCountTabList";
 
-    public static Intent newIntent(Context context , String name, int count){
-        Intent intent = new Intent(context , TabListActivity.class);
-        intent.putExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY,name);
-        intent.putExtra(EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY,count);
+
+    public static Intent newIntent(Context context, String name, int count) {
+        Intent intent = new Intent(context, TabListActivity.class);
+        intent.putExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY, name);
+        intent.putExtra(EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY, count);
         return intent;
     }
 
@@ -34,20 +37,27 @@ public class TabListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_list);
-        String name =getIntent().getStringExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY);
-        int n = getIntent().getIntExtra(EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY,0);
-        TaskRepository taskRepository = TaskRepository.getInstance(name,n);
+        String name = getIntent().getStringExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY);
+        int n = getIntent().getIntExtra(EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY, 0);
+
+        //it make first instance of repository
+        TaskRepository taskRepository = TaskRepository.getInstance(name, n);
         findViews();
         FragmentStateAdapter TaskAdapter = new TaskPagerListAdapter(this);
         mViewPager2.setAdapter(TaskAdapter);
+        mViewPager2.setPageTransformer(new DepthPageTransformer());
+        createTabBar();
+    }
+
+    private void createTabBar() {
         new TabLayoutMediator(mTabLayout, mViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if (position==0)
+                if (position == 0)
                     tab.setText("TODO");
-                else if (position==1)
+                else if (position == 1)
                     tab.setText("DOING");
-                else if (position==2)
+                else if (position == 2)
                     tab.setText("DONE");
             }
         }).attach();
@@ -57,7 +67,8 @@ public class TabListActivity extends AppCompatActivity {
         mViewPager2 = findViewById(R.id.view_pager_tab_list);
         mTabLayout = findViewById(R.id.tab_layout);
     }
-    private class TaskPagerListAdapter extends FragmentStateAdapter{
+
+    private class TaskPagerListAdapter extends FragmentStateAdapter {
 
         public TaskPagerListAdapter(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
@@ -66,11 +77,11 @@ public class TabListActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            if (position==0) {
+            if (position == 0) {
                 return ListFragment.newInstance(0);
-            }else if (position==1) {
+            } else if (position == 1) {
                 return ListFragment.newInstance(1);
-            }else if (position==2) {
+            } else if (position == 2) {
                 return ListFragment.newInstance(2);
             }
             return ListFragment.newInstance(10);
@@ -81,4 +92,5 @@ public class TabListActivity extends AppCompatActivity {
             return 3;
         }
     }
+
 }
