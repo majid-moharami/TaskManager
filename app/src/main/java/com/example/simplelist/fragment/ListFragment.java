@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.example.simplelist.R;
 import com.example.simplelist.Stats;
 import com.example.simplelist.model.Task;
 import com.example.simplelist.repository.TaskRepository;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +36,9 @@ public class ListFragment extends Fragment {
 
     public static final String ARGS_COUNT_INT = "countInt";
     private RecyclerView mRecyclerView;
-    private Button mButtonAdd;
+    private FloatingActionButton mButtonAdd;
     private TextView mTextViewWarning;
+
     private List<Task> mTasksOfTab = new ArrayList<>();
     private CardView mCardView;
     private TaskRepository mTaskRepository = TaskRepository.getInstance();
@@ -94,9 +97,15 @@ public class ListFragment extends Fragment {
             }
         }
 
-        if (getArguments().getInt(ARGS_COUNT_INT)==0) mTasksOfTab.addAll(tasks0);
-        if (getArguments().getInt(ARGS_COUNT_INT)==1) mTasksOfTab.addAll(tasks1);
-        if (getArguments().getInt(ARGS_COUNT_INT)==2) mTasksOfTab.addAll(tasks2);
+        if (getArguments().getInt(ARGS_COUNT_INT)==0){
+            mTasksOfTab.addAll(tasks0);
+        }
+        if (getArguments().getInt(ARGS_COUNT_INT)==1) {
+            mTasksOfTab.addAll(tasks1);
+        }
+        if (getArguments().getInt(ARGS_COUNT_INT)==2){
+            mTasksOfTab.addAll(tasks2);
+        }
     }
 
     private void orientationDiscriminant() {
@@ -126,8 +135,6 @@ public class ListFragment extends Fragment {
                 Animation animation = new AlphaAnimation(1.0f, 0.0f);
                 animation.setDuration(500);
                 mButtonAdd.startAnimation(animation);
-
-
                 Task task = new Task(mTaskRepository.getName());
                 if (mTasksOfTab.size()!=0)
                     task.setStats(mTasksOfTab.get(0).getStats());
@@ -156,16 +163,24 @@ public class ListFragment extends Fragment {
     private class NameHolder extends RecyclerView.ViewHolder {
 
         private TextView mTextViewName, mTextViewState;
-
+        private ImageView mImageViewTask;
         public NameHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewName = itemView.findViewById(R.id.textView_name_list);
             mTextViewState = itemView.findViewById(R.id.textView_state);
+            mImageViewTask = itemView.findViewById(R.id.imageView_task);
+
         }
 
         public void onBind(Task task) {
             mTextViewName.setText(task.getName());
             mTextViewState.setText(task.getStats().toString());
+            if (task.getStats().toString() == "TODO")
+                mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
+            if (task.getStats().toString() == "DOING")
+                mImageViewTask.setImageResource(R.mipmap.ic_launcher_doing_image_asset_foreground);
+            if (task.getStats().toString() == "DONE")
+                mImageViewTask.setImageResource(R.mipmap.ic_launcher_done_image_asset_foreground);
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 if (getAdapterPosition() % 2 == 0) {

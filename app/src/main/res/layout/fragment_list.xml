@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF143963"
-    android:gravity="center_horizontal"
+    android:background="#0D2847"
     android:orientation="vertical"
     tools:context=".fragment.ListFragment">
-
-   <TextView
-       android:id="@+id/warning"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="30dp"
-       android:gravity="center"
-       android:text="NO TASK EXIST"
-       android:textColor="#FFFFFF"
-       android:textSize="24sp"
-       android:visibility="gone" />
 
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/recycler_list_container"
        android:layout_width="match_parent"
-       android:layout_height="0dp"
-       android:layout_weight="1"
-       android:background="#FF143963"
-       android:layoutAnimation="@anim/layout_animation_fall_down" />
+       android:layout_height="match_parent"
+       android:background="#0D2847"
+       android:layoutAnimation="@anim/layout_animation_fall_down"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="1.0"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       app:layout_constraintVertical_bias="1.0">
 
+   </androidx.recyclerview.widget.RecyclerView>
 
-   <Button
+   <com.google.android.material.floatingactionbutton.FloatingActionButton
        android:id="@+id/button_add"
-       android:layout_width="match_parent"
+       android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_marginStart="20dp"
-       android:layout_marginTop="10dp"
-       android:layout_marginEnd="20dp"
-       android:layout_marginBottom="10dp"
-       android:background="@drawable/bach_create_btn"
-       android:text="@string/add"
-       android:textColor="#FBFBFB"
-       android:textSize="18sp"
-       android:textStyle="bold" />
+       android:layout_marginEnd="16dp"
+       android:layout_marginBottom="16dp"
+       android:clickable="true"
+       android:src="@drawable/ic_action_add_floting"
+       android:visibility="visible"
+       app:backgroundTint="#D32F2F"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintHorizontal_bias="1.0"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="@+id/recycler_list_container"
+       app:layout_constraintVertical_bias="1.0" />
+
+   <TextView
+       android:id="@+id/warning"
+       android:layout_width="245dp"
+       android:layout_height="52dp"
+       android:gravity="center"
+       android:text="NO TASK EXIST"
+       android:textColor="#FFFFFF"
+       android:textSize="24sp"
+       android:visibility="visible"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

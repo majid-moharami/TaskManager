@@ -10,18 +10,21 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.simplelist.R;
 import com.example.simplelist.fragment.ListFragment;
 import com.example.simplelist.repository.TaskRepository;
 import com.example.simplelist.utils.DepthPageTransformer;
 import com.example.simplelist.utils.ZoomOutPageTransformer;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class TabListActivity extends AppCompatActivity {
     private ViewPager2 mViewPager2;
     private TabLayout mTabLayout;
+    private FloatingActionButton mActionButtonAdd;
     public static final String EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY = "com.example.nameStringTabList";
     public static final String EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY = "com.example.listCountTabList";
 
@@ -43,10 +46,14 @@ public class TabListActivity extends AppCompatActivity {
         //it make first instance of repository
         TaskRepository taskRepository = TaskRepository.getInstance(name, n);
         findViews();
+        createViewPager();
+        createTabBar();
+    }
+
+    private void createViewPager() {
         FragmentStateAdapter TaskAdapter = new TaskPagerListAdapter(this);
         mViewPager2.setAdapter(TaskAdapter);
         mViewPager2.setPageTransformer(new DepthPageTransformer());
-        createTabBar();
     }
 
     private void createTabBar() {
@@ -66,6 +73,7 @@ public class TabListActivity extends AppCompatActivity {
     private void findViews() {
         mViewPager2 = findViewById(R.id.view_pager_tab_list);
         mTabLayout = findViewById(R.id.tab_layout);
+        mActionButtonAdd = findViewById(R.id.button_add);
     }
 
     private class TaskPagerListAdapter extends FragmentStateAdapter {
