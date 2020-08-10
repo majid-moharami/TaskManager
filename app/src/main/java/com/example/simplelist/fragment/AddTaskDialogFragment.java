@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -27,6 +28,8 @@ public class AddTaskDialogFragment extends DialogFragment {
 
     public static final String ARGS_GET_TAB_STATE_NUM = "com.example.simplelist.tab_state";
     public static final String EXTRA_RESPOSE_TASK = "extra_respose_task";
+    public static final String DATE_DIALOG_FRAGMENT_TAG = "DateDialogFragmentTag";
+    public static final int REQUEST_CODE_DATE_PICKER = 0;
     private TextInputLayout mTextInputLayoutTitle,mTextInputLayoutDescriptions;
     private EditText mEditTextTitle;
     private Button mButtonDate,mButtonTime,mButtonSave,mButtonCancel;
@@ -83,10 +86,25 @@ public class AddTaskDialogFragment extends DialogFragment {
         mButtonCancel = view.findViewById(R.id.add_dialog_button_cancel);
     }
     private void allListener() {
+        mButtonDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialogFragment datePickerDialogFragment = DatePickerDialogFragment.newInstance(mDate);
+                datePickerDialogFragment.setTargetFragment(AddTaskDialogFragment.this , REQUEST_CODE_DATE_PICKER);
+                datePickerDialogFragment.show(getFragmentManager() , DATE_DIALOG_FRAGMENT_TAG);
+            }
+        });
+
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult();
+                dismiss();
+            }
+        });
+        mButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });
@@ -105,5 +123,23 @@ public class AddTaskDialogFragment extends DialogFragment {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_RESPOSE_TASK,task);
         fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK || data == null)
+            return;
+
+        if (requestCode == REQUEST_CODE_DATE_PICKER) {
+           mDate = (Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+            String date = format.format(mDate);
+            String time = timeFormat.format(mDate);
+            mButtonDate.setText(date);
+            mButtonTime.setText(time);
+
+        }
     }
 }
