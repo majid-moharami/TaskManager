@@ -2,11 +2,22 @@ package com.example.simplelist.model;
 
 import com.example.simplelist.Stats;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.Random;
 
-public class Task {
+public class Task implements Serializable {
     private String name;
     private Stats mStats;
+    private Date mDate;
+
+    public Date getDate() {
+        return mDate;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
+    }
 
     public String getName() {
         return name;
@@ -24,9 +35,15 @@ public class Task {
         mStats = stats;
     }
 
+    public Task(){
+
+    }
+
     public Task(String name) {
         this.name = name;
+        mDate=new Date();
         mStats= Stats.randomState();
     }
+
 
 }

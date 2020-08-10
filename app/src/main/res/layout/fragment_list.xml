@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D2847"
+    android:background="#071525"
     android:orientation="vertical"
     tools:context=".fragment.ListFragment">
 
@@ -12,7 +12,7 @@
        android:id="@+id/recycler_list_container"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:background="#0D2847"
+       android:background="#011A37"
        android:layoutAnimation="@anim/layout_animation_fall_down"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
