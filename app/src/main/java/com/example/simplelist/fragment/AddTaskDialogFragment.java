@@ -30,6 +30,8 @@ public class AddTaskDialogFragment extends DialogFragment {
     public static final String EXTRA_RESPOSE_TASK = "extra_respose_task";
     public static final String DATE_DIALOG_FRAGMENT_TAG = "DateDialogFragmentTag";
     public static final int REQUEST_CODE_DATE_PICKER = 0;
+    public static final int REQUEST_CODE_TIME_PICKER = 1;
+    public static final String TIME_PICKER_DIALOG_FRAGMENT_TAG = "timePicker";
     private TextInputLayout mTextInputLayoutTitle,mTextInputLayoutDescriptions;
     private EditText mEditTextTitle;
     private Button mButtonDate,mButtonTime,mButtonSave,mButtonCancel;
@@ -69,7 +71,6 @@ public class AddTaskDialogFragment extends DialogFragment {
         String time = timeFormat.format(mDate);
         mButtonDate.setText(date);
         mButtonTime.setText(time);
-        initDatePicker();
         allListener();
 
         return view;
@@ -94,7 +95,14 @@ public class AddTaskDialogFragment extends DialogFragment {
                 datePickerDialogFragment.show(getFragmentManager() , DATE_DIALOG_FRAGMENT_TAG);
             }
         });
-
+        mButtonTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(mDate);
+                timePickerDialogFragment.setTargetFragment(AddTaskDialogFragment.this, REQUEST_CODE_TIME_PICKER);
+                timePickerDialogFragment.show(getFragmentManager() , TIME_PICKER_DIALOG_FRAGMENT_TAG);
+            }
+        });
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,10 +116,6 @@ public class AddTaskDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-    }
-
-    private void initDatePicker() {
-
     }
 
     private void setResult(){
@@ -132,14 +136,22 @@ public class AddTaskDialogFragment extends DialogFragment {
             return;
 
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
-           mDate = (Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE);
+            mDate = (Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE);
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
             String date = format.format(mDate);
             String time = timeFormat.format(mDate);
             mButtonDate.setText(date);
             mButtonTime.setText(time);
-
+        }
+        if (requestCode == REQUEST_CODE_TIME_PICKER){
+            mDate = (Date) data.getSerializableExtra(TimePickerDialogFragment.EXTRA_DATE_RESPONSE);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+            String date = format.format(mDate);
+            String time = timeFormat.format(mDate);
+            mButtonDate.setText(date);
+            mButtonTime.setText(time);
         }
     }
 }
