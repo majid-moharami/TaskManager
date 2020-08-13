@@ -32,8 +32,7 @@ public class AddTaskDialogFragment extends DialogFragment {
     public static final int REQUEST_CODE_DATE_PICKER = 0;
     public static final int REQUEST_CODE_TIME_PICKER = 1;
     public static final String TIME_PICKER_DIALOG_FRAGMENT_TAG = "timePicker";
-    private TextInputLayout mTextInputLayoutTitle,mTextInputLayoutDescriptions;
-    private EditText mEditTextTitle;
+    private EditText mEditTextTitle,mEditTextDescription;
     private Button mButtonDate,mButtonTime,mButtonSave,mButtonCancel;
     private Date mDate;
     private Stats s;
@@ -63,6 +62,13 @@ public class AddTaskDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_task_dialog, null);
         findViews(view);
+        initDialog();
+        allListener();
+
+        return view;
+    }
+
+    private void initDialog() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(mDate);
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
@@ -71,16 +77,12 @@ public class AddTaskDialogFragment extends DialogFragment {
         String time = timeFormat.format(mDate);
         mButtonDate.setText(date);
         mButtonTime.setText(time);
-        allListener();
-
-        return view;
     }
 
 
     private void findViews(View view) {
-        mTextInputLayoutTitle = view.findViewById(R.id.text_input_layout_title);
         mEditTextTitle = view.findViewById(R.id.edit_text_title);
-        mTextInputLayoutDescriptions = view.findViewById(R.id.text_input_layout_description);
+        mEditTextDescription = view.findViewById(R.id.edit_text_description);
         mButtonDate = view.findViewById(R.id.add_dialog_button_date);
         mButtonTime = view.findViewById(R.id.add_dialog_button_time);
         mButtonSave = view.findViewById(R.id.add_dialog_button_save);
@@ -124,6 +126,7 @@ public class AddTaskDialogFragment extends DialogFragment {
         task.setName(mEditTextTitle.getText().toString());
         task.setDate(mDate);
         task.setStats(s);
+        task.setDescription(mEditTextDescription.getText().toString());
         Intent intent = new Intent();
         intent.putExtra(EXTRA_RESPOSE_TASK,task);
         fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,intent);

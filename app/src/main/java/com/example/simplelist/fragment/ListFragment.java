@@ -8,17 +8,15 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,15 +37,15 @@ public class ListFragment extends Fragment {
 
     public static final String ARGS_COUNT_INT = "countInt";
     public static final int ADD_TASK_REQUEST_CODE = 0;
+    public static final int SHOW_DETAIL_TASK_REQUEST_CODE = 1;
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton mButtonAdd;
     private TextView mTextViewWarning;
-
+    private int mTabPosition;
     private List<Task> mTasksOfTab = new ArrayList<>();
-    private CardView mCardView;
     private TaskRepository mTaskRepository = TaskRepository.getInstance();
-
+    private NameAdapter mNameAdapter;
     public ListFragment() {
         // Required empty public constructor
     }
@@ -64,6 +62,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTabPosition = getArguments().getInt(ARGS_COUNT_INT);
     }
 
     @Override
@@ -85,6 +84,13 @@ public class ListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        fillListOfTab();
+        updateUI();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -96,6 +102,46 @@ public class ListFragment extends Fragment {
             mTasksOfTab.add(task);
             mTaskRepository.insert(task);
             updateUI();
+        }
+
+        if (requestCode == SHOW_DETAIL_TASK_REQUEST_CODE){
+            Task task = (Task) data.getSerializableExtra(ShowDetailDialogFragment.EXTRA_KEY_TASK_RESPONSE);
+            if (task.getStats() == null){
+                for (int i = 0; i < mTasksOfTab.size() ; i++) {
+                    if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
+                        Task task1 = mTasksOfTab.get(i);
+                        mTasksOfTab.remove(task1);
+                        mTaskRepository.delete(task1);
+                        updateUI();
+                        return;
+                    }
+                }
+            }else {
+                for (int i = 0; i < mTasksOfTab.size(); i++) {
+                    if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
+                        if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() == Stats.TODO){
+                            updateUI();
+                        }else if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() != Stats.TODO){
+                            mTasksOfTab.remove(i);
+                            updateUI();
+                        }
+                        if (mTabPosition == 1 && mTasksOfTab.get(i).getStats() == Stats.DOING){
+                            updateUI();
+                        }else if (mTabPosition == 1 && mTasksOfTab.get(i).getStats() != Stats.DOING){
+                            mTasksOfTab.remove(i);
+                            updateUI();
+                        }
+                        if (mTabPosition == 2 && mTasksOfTab.get(i).getStats() == Stats.DONE){
+                            updateUI();
+                        }else if (mTabPosition == 2 && mTasksOfTab.get(i).getStats() != Stats.DONE){
+                            mTasksOfTab.remove(i);
+                            updateUI();
+                        }
+
+                    }
+                }
+            }
+
         }
     }
 
@@ -118,14 +164,15 @@ public class ListFragment extends Fragment {
         }
 
         if (getArguments().getInt(ARGS_COUNT_INT) == 0) {
-            mTasksOfTab.addAll(tasks0);
+            mTasksOfTab=tasks0;
         }
         if (getArguments().getInt(ARGS_COUNT_INT) == 1) {
-            mTasksOfTab.addAll(tasks1);
+            mTasksOfTab=tasks1;
         }
         if (getArguments().getInt(ARGS_COUNT_INT) == 2) {
-            mTasksOfTab.addAll(tasks2);
+            mTasksOfTab=tasks2;
         }
+
     }
 
     private void orientationDiscriminant() {
@@ -141,34 +188,21 @@ public class ListFragment extends Fragment {
         if (mTasksOfTab.size() == 0) {
             mTextViewWarning.setVisibility(View.VISIBLE);
         } else mTextViewWarning.setVisibility(View.GONE);
-        NameAdapter adapter = new NameAdapter(mTasksOfTab);
-        mRecyclerView.setAdapter(adapter);
-        int resId = R.anim.layout_animation_fall_down;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
-        mRecyclerView.setLayoutAnimation(animation);
+        if (mNameAdapter==null){
+            mNameAdapter = new NameAdapter(mTasksOfTab);
+            mRecyclerView.setAdapter(mNameAdapter);
+        }else {
+            mNameAdapter.notifyDataSetChanged();
+        }
+//        int resId = R.anim.layout_animation_fall_down;
+//        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
+//        mRecyclerView.setLayoutAnimation(animation);
     }
 
     private void allListener() {
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Animation animation = new AlphaAnimation(1.0f, 0.0f);
-//                animation.setDuration(500);
-//                mButtonAdd.startAnimation(animation);
-//                Task task = new Task(mTaskRepository.getName());
-//                if (mTasksOfTab.size()!=0)
-//                    task.setStats(mTasksOfTab.get(0).getStats());
-//                else {
-//                    if (getArguments().getInt(ARGS_COUNT_INT,4)==0)
-//                        task.setStats(Stats.TODO);
-//                    if (getArguments().getInt(ARGS_COUNT_INT,4)==1)
-//                        task.setStats(Stats.DOING);
-//                    if (getArguments().getInt(ARGS_COUNT_INT,4)==2)
-//                        task.setStats(Stats.DONE);
-//                }
-//                mTasksOfTab.add(task);
-//                mTaskRepository.insert(task);
-//                updateUI();
                 AddTaskDialogFragment addTaskDialogFragment = AddTaskDialogFragment.newInstance(getArguments().getInt(ARGS_COUNT_INT));
                 addTaskDialogFragment.setTargetFragment(ListFragment.this, ADD_TASK_REQUEST_CODE);
                 addTaskDialogFragment.show(getFragmentManager(), "addTask");
@@ -188,7 +222,7 @@ public class ListFragment extends Fragment {
 
         private TextView mTextViewName, mTextViewState, mTextViewDate, mTextViewTime;
         private ImageView mImageViewTask;
-
+        private Task mTask;
         public NameHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewName = itemView.findViewById(R.id.textView_name_list);
@@ -197,9 +231,18 @@ public class ListFragment extends Fragment {
             mTextViewDate = itemView.findViewById(R.id.textView_date);
             mTextViewTime = itemView.findViewById(R.id.textView_time);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  ShowDetailDialogFragment showDetailDialogFragment = ShowDetailDialogFragment.newInstance(mTask);
+                  showDetailDialogFragment.setTargetFragment(ListFragment.this , SHOW_DETAIL_TASK_REQUEST_CODE);
+                  showDetailDialogFragment.show(getFragmentManager(),"showDetailDialog");
+                }
+            });
         }
 
         public void onBind(Task task) {
+            mTask = task;
             mTextViewName.setText(task.getName());
             mTextViewState.setText(task.getStats().toString());
             //formate date
@@ -226,7 +269,7 @@ public class ListFragment extends Fragment {
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 if (getAdapterPosition() % 2 == 0) {
-                    mCardView.setBackgroundColor(getAdapterPosition() % 4 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
+                    itemView.setBackgroundResource(getAdapterPosition() % 4 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
                 } else
                     itemView.setBackgroundResource((getAdapterPosition() + 2) % 3 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
             } else {

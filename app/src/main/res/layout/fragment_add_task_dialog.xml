@@ -128,10 +128,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add_dialog_button_save"
-        app:layout_constraintHorizontal_bias="0.889"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_dialog_button_time"
-        app:layout_constraintVertical_bias="0.173" />
+        app:layout_constraintVertical_bias="0.124" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
