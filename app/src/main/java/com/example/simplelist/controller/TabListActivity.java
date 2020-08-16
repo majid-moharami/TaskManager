@@ -13,7 +13,6 @@ import android.os.Bundle;
 
 import com.example.simplelist.R;
 import com.example.simplelist.fragment.ListFragment;
-import com.example.simplelist.repository.TaskRepository;
 import com.example.simplelist.utils.DepthPageTransformer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -42,7 +41,7 @@ public class TabListActivity extends AppCompatActivity {
 //        int n = getIntent().getIntExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY, 0);
 
         //it make first instance of repository
-        //TaskRepository taskRepository = TaskRepository.getInstance(name, n);
+
         findViews();
         createViewPager();
         createTabBar();

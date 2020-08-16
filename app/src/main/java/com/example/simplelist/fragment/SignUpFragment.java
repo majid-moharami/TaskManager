@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.example.simplelist.R;
 import com.example.simplelist.model.User;
-import com.example.simplelist.repository.UserRepository;
+import com.example.simplelist.repository.UserDBRepository;
 
 
 public class SignUpFragment extends Fragment {
@@ -23,7 +23,7 @@ public class SignUpFragment extends Fragment {
     private EditText mEditTextUserName,mEditTextPassword;
     private TextView mTextViewWrong;
 
-    private UserRepository mUserRepository = UserRepository.getInstance();
+    private UserDBRepository mUserRepository ;
     public SignUpFragment() {
         // Required empty public constructor
     }
@@ -38,6 +38,7 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserRepository = UserDBRepository.getInstance(getActivity());
     }
 
     @Override
@@ -64,15 +65,16 @@ public class SignUpFragment extends Fragment {
             public void onClick(View v) {
                 if (mEditTextUserName.getText().length() != 0 && mEditTextPassword.getText().length() != 0){
 
-                    for (int i = 0; i < mUserRepository.getList().size() ; i++) {
-                        if (!mEditTextUserName.getText().toString().equals(mUserRepository.getList().get(i).getUserName()) &&
-                              mEditTextPassword.getText().toString().equals(mUserRepository.getList().get(i).getUser_ID())
-                           ){
-                            mTextViewWrong.setText("This user already exist. please enter a new name or password");
-                            return;
+                    if (mUserRepository.getList()!=null) {
+                        for (int i = 0; i < mUserRepository.getList().size(); i++) {
+                            if (!mEditTextUserName.getText().toString().equals(mUserRepository.getList().get(i).getUserName()) &&
+                                    mEditTextPassword.getText().toString().equals(mUserRepository.getList().get(i).getUser_ID())
+                            ) {
+                                mTextViewWrong.setText("This user already exist. please enter a new name or password");
+                                return;
+                            }
                         }
                     }
-
                     User user = new User(mEditTextUserName.getText().toString() , mEditTextPassword.getText().toString());
                     mUserRepository.insert(user);
                     getActivity().finish();

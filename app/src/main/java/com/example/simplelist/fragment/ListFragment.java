@@ -1,6 +1,5 @@
 package com.example.simplelist.fragment;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +21,11 @@ import android.widget.TextView;
 import com.example.simplelist.R;
 import com.example.simplelist.Stats;
 import com.example.simplelist.model.Task;
-import com.example.simplelist.repository.TaskRepository;
+import com.example.simplelist.repository.TaskDBRepository;
 import com.example.simplelist.utils.ExtractingTime;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -46,7 +42,7 @@ public class ListFragment extends Fragment {
     private TextView mTextViewWarning;
     private int mTabPosition;
     private List<Task> mTasksOfTab = new ArrayList<>();
-    private TaskRepository mTaskRepository = TaskRepository.getInstance();
+    private TaskDBRepository mTaskRepository;
     private NameAdapter mNameAdapter;
 
     /**
@@ -67,6 +63,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTaskRepository = TaskDBRepository.getInstance(getActivity());
         mTabPosition = getArguments().getInt(ARGS_COUNT_INT);
     }
 
@@ -148,27 +145,33 @@ public class ListFragment extends Fragment {
             //
             else {
                 for (int i = 0; i < mTasksOfTab.size(); i++) {
-                    //find the response task from repository
+                    //find the response task from tasks of tab
                     if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
 
                         //if response task state is equale with task of repository just update the ui
                         // else the state not equale the task in the mTaskOfTab will remove
                         if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() == Stats.TODO){
                             updateUI();
+                            mTaskRepository.update(task);
                         }else if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() != Stats.TODO){
                             mTasksOfTab.remove(i);
+                            mTaskRepository.update(task);
                             updateUI();
                         }
                         if (mTabPosition == 1 && mTasksOfTab.get(i).getStats() == Stats.DOING){
                             updateUI();
+                            mTaskRepository.update(task);
                         }else if (mTabPosition == 1 && mTasksOfTab.get(i).getStats() != Stats.DOING){
                             mTasksOfTab.remove(i);
+                            mTaskRepository.update(task);
                             updateUI();
                         }
                         if (mTabPosition == 2 && mTasksOfTab.get(i).getStats() == Stats.DONE){
                             updateUI();
+                            mTaskRepository.update(task);
                         }else if (mTabPosition == 2 && mTasksOfTab.get(i).getStats() != Stats.DONE){
                             mTasksOfTab.remove(i);
+                            mTaskRepository.update(task);
                             updateUI();
                         }
 

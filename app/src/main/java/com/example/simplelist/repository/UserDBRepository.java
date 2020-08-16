@@ -24,12 +24,12 @@ public class UserDBRepository implements IRepository<User> {
     public static UserDBRepository getInstance(Context context){
         mContext = context.getApplicationContext();
         if (sUserDBRepository == null)
-            sUserDBRepository = new UserDBRepository(mContext);
+            sUserDBRepository = new UserDBRepository();
         return sUserDBRepository;
     }
 
-    private UserDBRepository(Context context) {
-        TaskManagerDBHelper taskManagerDBHelper = new TaskManagerDBHelper(context);
+    private UserDBRepository() {
+        TaskManagerDBHelper taskManagerDBHelper = new TaskManagerDBHelper(mContext);
         mSQLiteDatabase = taskManagerDBHelper.getWritableDatabase();
     }
 
@@ -51,7 +51,7 @@ public class UserDBRepository implements IRepository<User> {
         finally {
             cursorWrapper.close();
         }
-        return null;
+        return users;
     }
 
     @Override

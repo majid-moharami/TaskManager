@@ -18,7 +18,10 @@ import android.widget.TextView;
 import com.example.simplelist.R;
 import com.example.simplelist.controller.SignUpActivity;
 import com.example.simplelist.controller.TabListActivity;
-import com.example.simplelist.repository.UserRepository;
+import com.example.simplelist.model.User;
+import com.example.simplelist.repository.UserDBRepository;
+
+import java.util.List;
 
 
 public class LoginFragment extends Fragment {
@@ -27,7 +30,7 @@ public class LoginFragment extends Fragment {
     private EditText mEditTextName , mEditTextPssword;
     private Button mButtonLogin,mButtonSignUp;
 
-    private UserRepository mUserRepository = UserRepository.getInstance();
+    private UserDBRepository mUserRepository ;
 
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
@@ -39,6 +42,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserRepository = UserDBRepository.getInstance(getActivity());
     }
 
     @Override
@@ -73,11 +77,14 @@ public class LoginFragment extends Fragment {
                     mTextViewWrong.setText("please fill the information completely");
                 }
 
-                for (int i = 0; i < mUserRepository.getList().size(); i++) {
-                    if (mUserRepository.getList().get(i).getUserName().equals(mEditTextName.getText().toString()) &&
-                            mUserRepository.getList().get(i).getUser_ID().equals(mEditTextPssword.getText().toString())){
-                        Intent intent = TabListActivity.newIntent(getActivity(),mEditTextPssword.getText().toString());
-                        startActivity(intent);
+                List<User> users  =mUserRepository.getList();
+                if (users!=null) {
+                    for (int i = 0; i < mUserRepository.getList().size(); i++) {
+                        if (mUserRepository.getList().get(i).getUserName().equals(mEditTextName.getText().toString()) &&
+                                mUserRepository.getList().get(i).getUser_ID().equals(mEditTextPssword.getText().toString())) {
+                            Intent intent = TabListActivity.newIntent(getActivity(), mEditTextPssword.getText().toString());
+                            startActivity(intent);
+                        }
                     }
                 }
             }
