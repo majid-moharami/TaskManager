@@ -16,14 +16,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.simplelist.R;
+import com.example.simplelist.controller.SignUpActivity;
 import com.example.simplelist.controller.TabListActivity;
+import com.example.simplelist.repository.UserRepository;
 
 
 public class LoginFragment extends Fragment {
 
     private TextView mTextViewWrong;
-    private EditText mEditTextName , mEditTextNumber;
-    private Button mButtonCreate;
+    private EditText mEditTextName , mEditTextPssword;
+    private Button mButtonLogin,mButtonSignUp;
+
+    private UserRepository mUserRepository = UserRepository.getInstance();
 
     public static LoginFragment newInstance() {
         LoginFragment fragment = new LoginFragment();
@@ -49,27 +53,41 @@ public class LoginFragment extends Fragment {
 
 
     private void findAllView(View view) {
-        mButtonCreate = view.findViewById(R.id.button_create);
-        mEditTextName = view.findViewById(R.id.edittxt_name);
-        mEditTextNumber = view.findViewById(R.id.editTextNumber);
+        mButtonLogin = view.findViewById(R.id.button_login);
+        mButtonSignUp = view.findViewById(R.id.button_signUp);
+        mEditTextName = view.findViewById(R.id.edittxt_user_name);
+        mEditTextPssword = view.findViewById(R.id.editText_password);
         mTextViewWrong = view.findViewById(R.id.textView_wrong);
     }
 
     private void allListener() {
-        mButtonCreate.setOnClickListener(new View.OnClickListener() {
+        mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
-                if (mEditTextNumber.getText().length()!=0 && mEditTextName.getText().length()!=0){
-                    Intent intent = TabListActivity.newIntent(getActivity(),String.valueOf(mEditTextName.getText()),Integer.parseInt(String.valueOf(mEditTextNumber.getText())));
-                    startActivity(intent);
-                    getActivity().finish();
-                }else {
+
+                if (mEditTextPssword.getText().length()==0 && mEditTextName.getText().length()==0){
                     Animation animation = new RotateAnimation(1.0f,0.0f);
                     animation.setDuration(500);
-                    mButtonCreate.startAnimation(animation);
-                    mTextViewWrong.setText("please fill the name and number completely");
+                    mButtonLogin.startAnimation(animation);
+                    mTextViewWrong.setText("please fill the information completely");
                 }
+
+                for (int i = 0; i < mUserRepository.getList().size(); i++) {
+                    if (mUserRepository.getList().get(i).getUserName().equals(mEditTextName.getText().toString()) &&
+                            mUserRepository.getList().get(i).getUser_ID().equals(mEditTextPssword.getText().toString())){
+                        Intent intent = TabListActivity.newIntent(getActivity(),mEditTextPssword.getText().toString());
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+
+        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity() , SignUpActivity.class);
+                startActivity(intent);
             }
         });
     }

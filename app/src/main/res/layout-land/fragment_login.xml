@@ -18,7 +18,7 @@
         android:textSize="24sp" />
 
     <EditText
-        android:id="@+id/edittxt_name"
+        android:id="@+id/edittxt_user_name"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_below="@id/textView"
@@ -37,10 +37,10 @@
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/editText_password"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_below="@id/edittxt_name"
+        android:layout_below="@id/edittxt_user_name"
         android:layout_centerInParent="true"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
@@ -57,7 +57,7 @@
         android:id="@+id/textView_wrong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextNumber"
+        android:layout_below="@id/editText_password"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="100dp"
@@ -65,7 +65,7 @@
         android:textSize="18sp" />
 
     <Button
-        android:id="@+id/button_create"
+        android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView_wrong"

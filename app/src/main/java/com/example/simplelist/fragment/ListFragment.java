@@ -24,6 +24,7 @@ import com.example.simplelist.R;
 import com.example.simplelist.Stats;
 import com.example.simplelist.model.Task;
 import com.example.simplelist.repository.TaskRepository;
+import com.example.simplelist.utils.ExtractingTime;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ public class ListFragment extends Fragment {
     public static final String ARGS_COUNT_INT = "countInt";
     public static final int ADD_TASK_REQUEST_CODE = 0;
     public static final int SHOW_DETAIL_TASK_REQUEST_CODE = 1;
+    public static final String ARGS_KEY_USER_ID = "userId";
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton mButtonAdd;
@@ -46,15 +48,18 @@ public class ListFragment extends Fragment {
     private List<Task> mTasksOfTab = new ArrayList<>();
     private TaskRepository mTaskRepository = TaskRepository.getInstance();
     private NameAdapter mNameAdapter;
-    public ListFragment() {
-        // Required empty public constructor
-    }
 
-
-    public static ListFragment newInstance(int n) {
+    /**
+     *
+     * @param n is show position of viewPager and we bind the task with this param
+     * @param userID is the user id of who login to program and bind the task specialy for this user
+     * @return
+     */
+    public static ListFragment newInstance(int n , String userID) {
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_COUNT_INT, n);
+        args.putString(ARGS_KEY_USER_ID,userID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,6 +95,25 @@ public class ListFragment extends Fragment {
         updateUI();
     }
 
+    private void findAllView(View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_list_container);
+        mButtonAdd = view.findViewById(R.id.button_add);
+        mTextViewWarning = view.findViewById(R.id.warning);
+
+    }
+
+    private void allListener() {
+        mButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddTaskDialogFragment addTaskDialogFragment = AddTaskDialogFragment.newInstance(getArguments().getInt(ARGS_COUNT_INT),getArguments().getString(ARGS_KEY_USER_ID));
+                addTaskDialogFragment.setTargetFragment(ListFragment.this, ADD_TASK_REQUEST_CODE);
+                addTaskDialogFragment.show(getFragmentManager(), "addTask");
+
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -105,7 +129,11 @@ public class ListFragment extends Fragment {
         }
 
         if (requestCode == SHOW_DETAIL_TASK_REQUEST_CODE){
+
+            //getting the task from result of show detail dialog
             Task task = (Task) data.getSerializableExtra(ShowDetailDialogFragment.EXTRA_KEY_TASK_RESPONSE);
+
+            //if state is null it mean task will be delete from repository
             if (task.getStats() == null){
                 for (int i = 0; i < mTasksOfTab.size() ; i++) {
                     if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
@@ -116,9 +144,15 @@ public class ListFragment extends Fragment {
                         return;
                     }
                 }
-            }else {
+            }
+            //
+            else {
                 for (int i = 0; i < mTasksOfTab.size(); i++) {
+                    //find the response task from repository
                     if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
+
+                        //if response task state is equale with task of repository just update the ui
+                        // else the state not equale the task in the mTaskOfTab will remove
                         if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() == Stats.TODO){
                             updateUI();
                         }else if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() != Stats.TODO){
@@ -150,19 +184,22 @@ public class ListFragment extends Fragment {
         List<Task> tasks0 = new ArrayList<>();
         List<Task> tasks1 = new ArrayList<>();
         List<Task> tasks2 = new ArrayList<>();
-
-        for (int i = 0; i < mTaskRepository.getList().size(); i++) {
-            if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO")) {
-                tasks0.add(mTaskRepository.getList().get(i));
-            }
-            if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING")) {
-                tasks1.add(mTaskRepository.getList().get(i));
-            }
-            if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE")) {
-                tasks2.add(mTaskRepository.getList().get(i));
+        if ( mTaskRepository.getList()!=null) {
+            for (int i = 0; i < mTaskRepository.getList().size(); i++) {
+                if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO") &&
+                        mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
+                    tasks0.add(mTaskRepository.getList().get(i));
+                }
+                if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING") &&
+                        mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
+                    tasks1.add(mTaskRepository.getList().get(i));
+                }
+                if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE") &&
+                        mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
+                    tasks2.add(mTaskRepository.getList().get(i));
+                }
             }
         }
-
         if (getArguments().getInt(ARGS_COUNT_INT) == 0) {
             mTasksOfTab=tasks0;
         }
@@ -194,28 +231,6 @@ public class ListFragment extends Fragment {
         }else {
             mNameAdapter.notifyDataSetChanged();
         }
-//        int resId = R.anim.layout_animation_fall_down;
-//        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
-//        mRecyclerView.setLayoutAnimation(animation);
-    }
-
-    private void allListener() {
-        mButtonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddTaskDialogFragment addTaskDialogFragment = AddTaskDialogFragment.newInstance(getArguments().getInt(ARGS_COUNT_INT));
-                addTaskDialogFragment.setTargetFragment(ListFragment.this, ADD_TASK_REQUEST_CODE);
-                addTaskDialogFragment.show(getFragmentManager(), "addTask");
-
-            }
-        });
-    }
-
-    private void findAllView(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_list_container);
-        mButtonAdd = view.findViewById(R.id.button_add);
-        mTextViewWarning = view.findViewById(R.id.warning);
-
     }
 
     private class NameHolder extends RecyclerView.ViewHolder {
@@ -245,18 +260,9 @@ public class ListFragment extends Fragment {
             mTask = task;
             mTextViewName.setText(task.getName());
             mTextViewState.setText(task.getStats().toString());
-            //formate date
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-            String date = format.format(task.getDate());
-            mTextViewDate.setText(date);
 
-            //extract time
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(task.getDate());
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm ");
-            String hour = timeFormat.format(task.getDate());
-
-            mTextViewTime.setText(hour);
+            mTextViewDate.setText(ExtractingTime.formatDate(task.getDate()));
+            mTextViewTime.setText(ExtractingTime.formatTime(task.getDate()));
 
             if (task.getStats().toString() == "TODO")
                 mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
@@ -268,12 +274,12 @@ public class ListFragment extends Fragment {
 
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (getAdapterPosition() % 2 == 0) {
-                    itemView.setBackgroundResource(getAdapterPosition() % 4 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
+                if (getAbsoluteAdapterPosition() % 2 == 0) {
+                    itemView.setBackgroundResource(getAbsoluteAdapterPosition() % 4 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
                 } else
-                    itemView.setBackgroundResource((getAdapterPosition() + 2) % 3 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
+                    itemView.setBackgroundResource((getAbsoluteAdapterPosition() + 2) % 3 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
             } else {
-                itemView.setBackgroundResource(getAdapterPosition() % 2 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
+                itemView.setBackgroundResource(getAbsoluteAdapterPosition() % 2 == 0 ? R.drawable.dark_back_row : R.drawable.dark_back_row2);
             }
 
         }

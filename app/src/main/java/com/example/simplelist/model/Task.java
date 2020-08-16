@@ -13,6 +13,11 @@ public class Task implements Serializable {
     private Date mDate;
     private String mDescription;
     private UUID mTaskID;
+    private String mUserID;
+
+    public String getUserID() {
+        return mUserID;
+    }
 
     public String getDescription() {
         return mDescription;
@@ -50,15 +55,20 @@ public class Task implements Serializable {
         return mTaskID;
     }
 
-    public Task(){
+    public Task() {
+    }
+
+    public Task(String userID){
+        mUserID = userID;
         mTaskID = UUID.randomUUID();
     }
 
-    public Task(String name) {
+    public Task(String name , String userID) {
         this.name = name;
         mDate=new Date();
         mStats= Stats.randomState();
         mTaskID = UUID.randomUUID();
+        mUserID = userID;
     }
 
 

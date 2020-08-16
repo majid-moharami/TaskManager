@@ -32,15 +32,17 @@ public class AddTaskDialogFragment extends DialogFragment {
     public static final int REQUEST_CODE_DATE_PICKER = 0;
     public static final int REQUEST_CODE_TIME_PICKER = 1;
     public static final String TIME_PICKER_DIALOG_FRAGMENT_TAG = "timePicker";
+    public static final String ARGS_KEY_USER_ID_FOR_MAKING_OBJECT = "userIdForMakingObject";
     private EditText mEditTextTitle,mEditTextDescription;
     private Button mButtonDate,mButtonTime,mButtonSave,mButtonCancel;
     private Date mDate;
     private Stats s;
     // TODO: Rename and change types and number of parameters
-    public static AddTaskDialogFragment newInstance(int n) {
+    public static AddTaskDialogFragment newInstance(int n , String userId) {
         AddTaskDialogFragment fragment = new AddTaskDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_GET_TAB_STATE_NUM,n);
+        args.putString(ARGS_KEY_USER_ID_FOR_MAKING_OBJECT,userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -122,7 +124,7 @@ public class AddTaskDialogFragment extends DialogFragment {
 
     private void setResult(){
         Fragment fragment = getTargetFragment();
-        Task task = new Task();
+        Task task = new Task(getArguments().getString(ARGS_KEY_USER_ID_FOR_MAKING_OBJECT));
         task.setName(mEditTextTitle.getText().toString());
         task.setDate(mDate);
         task.setStats(s);

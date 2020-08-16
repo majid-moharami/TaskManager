@@ -14,12 +14,15 @@ public class TaskRepository implements IRepository<Task> {
     private static TaskRepository sTaskRepository;
 
     public static TaskRepository getInstance() {
+        if (sTaskRepository == null)
+            return sTaskRepository = new TaskRepository();
+
         return sTaskRepository;
     }
 
     public static TaskRepository getInstance(String name , int number) {
         if (sTaskRepository == null)
-           return sTaskRepository = new TaskRepository(name,number);
+           return sTaskRepository = new TaskRepository();
 
         return sTaskRepository;
     }
@@ -27,14 +30,7 @@ public class TaskRepository implements IRepository<Task> {
     private TaskRepository() {
     }
 
-    private TaskRepository(String name, int number) {
-        mName = name;
-        mNumber = number;
-        for (int i = 0; i < mNumber ; i++) {
-            Task task = new Task(name);
-            mTaskList.add(task);
-        }
-    }
+
 
 
     @Override

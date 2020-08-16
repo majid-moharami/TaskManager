@@ -10,13 +10,11 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.example.simplelist.R;
 import com.example.simplelist.fragment.ListFragment;
 import com.example.simplelist.repository.TaskRepository;
 import com.example.simplelist.utils.DepthPageTransformer;
-import com.example.simplelist.utils.ZoomOutPageTransformer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -25,14 +23,14 @@ public class TabListActivity extends AppCompatActivity {
     private ViewPager2 mViewPager2;
     private TabLayout mTabLayout;
     private FloatingActionButton mActionButtonAdd;
-    public static final String EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY = "com.example.nameStringTabList";
-    public static final String EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY = "com.example.listCountTabList";
+    public static final String EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY = "com.example.nameStringForTabList";
+    public static final String EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY = "com.example.userIDForTabList";
 
 
-    public static Intent newIntent(Context context, String name, int count) {
+    public static Intent newIntent(Context context,  String userID) {
         Intent intent = new Intent(context, TabListActivity.class);
-        intent.putExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY, name);
-        intent.putExtra(EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY, count);
+        //intent.putExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY, name);
+        intent.putExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY, userID);
         return intent;
     }
 
@@ -40,11 +38,11 @@ public class TabListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_list);
-        String name = getIntent().getStringExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY);
-        int n = getIntent().getIntExtra(EXTRA_KEY_LIST_COUNT_TAB_LIST_ACTIVITY, 0);
+//        String name = getIntent().getStringExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY);
+//        int n = getIntent().getIntExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY, 0);
 
         //it make first instance of repository
-        TaskRepository taskRepository = TaskRepository.getInstance(name, n);
+        //TaskRepository taskRepository = TaskRepository.getInstance(name, n);
         findViews();
         createViewPager();
         createTabBar();
@@ -86,13 +84,13 @@ public class TabListActivity extends AppCompatActivity {
         @Override
         public Fragment createFragment(int position) {
             if (position == 0) {
-                return ListFragment.newInstance(0);
+                return ListFragment.newInstance(0 , getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
             } else if (position == 1) {
-                return ListFragment.newInstance(1);
+                return ListFragment.newInstance(1,getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
             } else if (position == 2) {
-                return ListFragment.newInstance(2);
+                return ListFragment.newInstance(2,getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
             }
-            return ListFragment.newInstance(10);
+            return ListFragment.newInstance(10,getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
         }
 
         @Override
