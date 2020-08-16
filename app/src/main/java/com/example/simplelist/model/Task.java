@@ -58,6 +58,15 @@ public class Task implements Serializable {
     public Task() {
     }
 
+    public Task(String name, Stats stats, Date date, String description, UUID taskID, String userID) {
+        this.name = name;
+        mStats = stats;
+        mDate = date;
+        mDescription = description;
+        mTaskID = taskID;
+        mUserID = userID;
+    }
+
     public Task(String userID){
         mUserID = userID;
         mTaskID = UUID.randomUUID();
