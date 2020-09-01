@@ -110,7 +110,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
     }
 
     private void initDialog(){
-        mEditTextTitle.setText(mTask.getName());
+        mEditTextTitle.setText(mTask.getTitle());
         mEditTextDescription.setText(mTask.getDescription());
         if (mTask.getStats().toString().equals("TODO"))
             mRadioButtonTODO.setChecked(true);
@@ -152,7 +152,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTask.setName(mEditTextTitle.getText().toString());
+                mTask.setTitle(mEditTextTitle.getText().toString());
                 mTask.setDescription(mEditTextDescription.getText().toString());
                 if (mRadioButtonTODO.isChecked())
                     mTask.setStats(Stats.TODO);

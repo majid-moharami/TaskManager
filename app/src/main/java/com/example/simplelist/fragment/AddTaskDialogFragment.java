@@ -17,7 +17,6 @@ import android.widget.EditText;
 import com.example.simplelist.R;
 import com.example.simplelist.Stats;
 import com.example.simplelist.model.Task;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,7 +25,7 @@ import java.util.Date;
 
 public class AddTaskDialogFragment extends DialogFragment {
 
-    public static final String ARGS_GET_TAB_STATE_NUM = "com.example.simplelist.tab_state";
+    public static final String ARGS_GET_TAB_STAET = "com.example.simplelist.tab_state";
     public static final String EXTRA_RESPOSE_TASK = "extra_respose_task";
     public static final String DATE_DIALOG_FRAGMENT_TAG = "DateDialogFragmentTag";
     public static final int REQUEST_CODE_DATE_PICKER = 0;
@@ -38,10 +37,10 @@ public class AddTaskDialogFragment extends DialogFragment {
     private Date mDate;
     private Stats s;
     // TODO: Rename and change types and number of parameters
-    public static AddTaskDialogFragment newInstance(int n , String userId) {
+    public static AddTaskDialogFragment newInstance(String state , String userId) {
         AddTaskDialogFragment fragment = new AddTaskDialogFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_GET_TAB_STATE_NUM,n);
+        args.putString(ARGS_GET_TAB_STAET,state);
         args.putString(ARGS_KEY_USER_ID_FOR_MAKING_OBJECT,userId);
         fragment.setArguments(args);
         return fragment;
@@ -51,11 +50,11 @@ public class AddTaskDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDate = new Date();
-        if (getArguments().getInt(ARGS_GET_TAB_STATE_NUM)==0)
+        if (getArguments().getString(ARGS_GET_TAB_STAET).equals("TODO"))
             s=Stats.TODO;
-        if (getArguments().getInt(ARGS_GET_TAB_STATE_NUM)==1)
+        if (getArguments().getString(ARGS_GET_TAB_STAET).equals("DOING"))
             s=Stats.DOING;
-        if (getArguments().getInt(ARGS_GET_TAB_STATE_NUM)==2)
+        if (getArguments().getString(ARGS_GET_TAB_STAET).equals("DONE"))
             s=Stats.DONE;
     }
 
@@ -125,7 +124,7 @@ public class AddTaskDialogFragment extends DialogFragment {
     private void setResult(){
         Fragment fragment = getTargetFragment();
         Task task = new Task(getArguments().getString(ARGS_KEY_USER_ID_FOR_MAKING_OBJECT));
-        task.setName(mEditTextTitle.getText().toString());
+        task.setTitle(mEditTextTitle.getText().toString());
         task.setDate(mDate);
         task.setStats(s);
         task.setDescription(mEditTextDescription.getText().toString());

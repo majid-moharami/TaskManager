@@ -28,7 +28,7 @@ public class LoginFragment extends Fragment {
 
     private TextView mTextViewWrong;
     private EditText mEditTextName , mEditTextPssword;
-    private Button mButtonLogin,mButtonSignUp;
+    private Button mButtonLogin,mButtonSignUp,mButtonAdmin;
 
     private UserDBRepository mUserRepository ;
 
@@ -59,6 +59,7 @@ public class LoginFragment extends Fragment {
     private void findAllView(View view) {
         mButtonLogin = view.findViewById(R.id.button_login);
         mButtonSignUp = view.findViewById(R.id.button_signUp);
+        mButtonAdmin = view.findViewById(R.id.button_admin);
         mEditTextName = view.findViewById(R.id.edittxt_user_name);
         mEditTextPssword = view.findViewById(R.id.editText_password);
         mTextViewWrong = view.findViewById(R.id.textView_wrong);
@@ -87,6 +88,14 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 }
+            }
+        });
+
+        mButtonAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = TabListActivity.newIntent(getActivity(),"ADMIN");
+                startActivity(intent);
             }
         });
 

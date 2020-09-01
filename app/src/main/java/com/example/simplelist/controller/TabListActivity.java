@@ -2,6 +2,7 @@ package com.example.simplelist.controller;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.simplelist.R;
+import com.example.simplelist.Stats;
 import com.example.simplelist.fragment.ListFragment;
 import com.example.simplelist.utils.DepthPageTransformer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +23,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class TabListActivity extends AppCompatActivity {
     private ViewPager2 mViewPager2;
     private TabLayout mTabLayout;
+    private Toolbar mToolbar;
     private FloatingActionButton mActionButtonAdd;
     public static final String EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY = "com.example.nameStringForTabList";
     public static final String EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY = "com.example.userIDForTabList";
@@ -41,8 +44,8 @@ public class TabListActivity extends AppCompatActivity {
 //        int n = getIntent().getIntExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY, 0);
 
         //it make first instance of repository
-
         findViews();
+        setSupportActionBar(mToolbar);
         createViewPager();
         createTabBar();
     }
@@ -71,6 +74,7 @@ public class TabListActivity extends AppCompatActivity {
         mViewPager2 = findViewById(R.id.view_pager_tab_list);
         mTabLayout = findViewById(R.id.tab_layout);
         mActionButtonAdd = findViewById(R.id.button_add);
+        mToolbar  =findViewById(R.id.toolbar_tab_activity);
     }
 
     private class TaskPagerListAdapter extends FragmentStateAdapter {
@@ -83,13 +87,13 @@ public class TabListActivity extends AppCompatActivity {
         @Override
         public Fragment createFragment(int position) {
             if (position == 0) {
-                return ListFragment.newInstance(0 , getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
+                return ListFragment.newInstance(Stats.TODO.toString(), getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
             } else if (position == 1) {
-                return ListFragment.newInstance(1,getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
+                return ListFragment.newInstance(Stats.DOING.toString(),getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
             } else if (position == 2) {
-                return ListFragment.newInstance(2,getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
+                return ListFragment.newInstance(Stats.DONE.toString(),getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
             }
-            return ListFragment.newInstance(10,getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
+            return ListFragment.newInstance(Stats.TODO.toString(),getIntent().getStringExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY));
         }
 
         @Override

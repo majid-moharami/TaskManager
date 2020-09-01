@@ -97,7 +97,7 @@
 
     <Button
         android:id="@+id/button_signUp"
-        android:layout_width="121dp"
+        android:layout_width="130dp"
         android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bach_create_btn"
@@ -109,4 +109,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_login"
         app:layout_constraintVertical_bias="0.119" />
+
+    <Button
+        android:id="@+id/button_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bach_create_btn"
+        android:text="admin"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_signUp"
+        app:layout_constraintVertical_bias="0.307" />
 </androidx.constraintlayout.widget.ConstraintLayout>

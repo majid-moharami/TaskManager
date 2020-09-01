@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_fragment_contaner"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#355167"
+    tools:context=".fragment.SearchFragment">
+
+    <CheckBox
+        android:id="@+id/checkBox_by_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/check_box_background"
+        android:padding="8dp"
+        android:text="Search By Date and Time"
+        android:textColor="#FAFAFA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.077"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="#011A37"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/button_search_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:src="@mipmap/ic_launcher_back_final_foreground" />
+
+        <EditText
+            android:id="@+id/search_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#072B51"
+            android:ems="10"
+            android:hint="search by title"
+            android:inputType="textPersonName"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D3D2D2"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="0dp"
+        android:layout_height="163dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:cardBackgroundColor="#FF011A37"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_by_date"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTaxt_month_origin"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#76FF03"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="mm"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="/"
+                android:textColor="#F6F6F6"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_day_origin"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#76FF03"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="dd"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView33"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="/"
+                android:textColor="#F6F6F6"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_year_origin"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#76FF03"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="yyyy"
+                android:inputType="number"
+                android:maxLength="4"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:gravity="center|center_horizontal"
+                android:text="To"
+                android:textColor="#FBFBFB"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_month_destination"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#76FF03"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="mm"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView311"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="/"
+                android:textColor="#F6F6F6"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_day_destination"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#76FF03"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="dd"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView313"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="/"
+                android:textColor="#F6F6F6"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_year_destination"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#76FF03"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="yyyy"
+                android:inputType="number"
+                android:maxLength="4"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTaxt_hour_orogin"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#FF1744"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="HH"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=":"
+                android:textColor="#F6F6F6"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_minute_orogin"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#FF1744"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="mm"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="To"
+                android:textColor="#FBFBFB"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_hour_destination"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#FF1744"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="HH"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+            <TextView
+                android:id="@+id/textView3141"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=":"
+                android:textColor="#F6F6F6"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTaxt_minute_destination"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#FF1744"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="mm"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="#FAF9F9"
+                android:textColorHint="#B8B8B8" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/button_do_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/check_box_background"
+        android:text="Search"
+        android:textColor="#F6F5F5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_list_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_do_search" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,7 @@ public class ExtractingTime {
     public static String formatTime(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm ");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         String hourMinute = timeFormat.format(date);
         return hourMinute;
     }

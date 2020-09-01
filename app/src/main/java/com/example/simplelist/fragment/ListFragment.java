@@ -13,13 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.simplelist.R;
-import com.example.simplelist.Stats;
+import com.example.simplelist.controller.SearchActivity;
 import com.example.simplelist.model.Task;
 import com.example.simplelist.repository.TaskDBRepository;
 import com.example.simplelist.utils.ExtractingTime;
@@ -32,10 +35,11 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
 
-    public static final String ARGS_COUNT_INT = "countInt";
+    public static final String ARGS_TAB_STATES = "stateTab";
     public static final int ADD_TASK_REQUEST_CODE = 0;
     public static final int SHOW_DETAIL_TASK_REQUEST_CODE = 1;
     public static final String ARGS_KEY_USER_ID = "userId";
+    public static final String EXTRA_KEY_USER_ID = "userID";
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton mButtonAdd;
@@ -44,18 +48,18 @@ public class ListFragment extends Fragment {
     private List<Task> mTasksOfTab = new ArrayList<>();
     private TaskDBRepository mTaskRepository;
     private NameAdapter mNameAdapter;
+    private String mUserId;
 
     /**
-     *
-     * @param n is show position of viewPager and we bind the task with this param
+     * @param state  is show position of viewPager and we bind the task with this param
      * @param userID is the user id of who login to program and bind the task specialy for this user
      * @return
      */
-    public static ListFragment newInstance(int n , String userID) {
+    public static ListFragment newInstance(String state, String userID) {
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_COUNT_INT, n);
-        args.putString(ARGS_KEY_USER_ID,userID);
+        args.putString(ARGS_TAB_STATES, state);
+        args.putString(ARGS_KEY_USER_ID, userID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,8 +68,11 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTaskRepository = TaskDBRepository.getInstance(getActivity());
-        mTabPosition = getArguments().getInt(ARGS_COUNT_INT);
+        mTabPosition = getArguments().getInt(ARGS_TAB_STATES);
+        setHasOptionsMenu(true);
+        mUserId = getArguments().getString(ARGS_KEY_USER_ID);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +93,23 @@ public class ListFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.list_fragment_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.search_icon:
+                clickSearchIcon();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         fillListOfTab();
@@ -103,7 +127,7 @@ public class ListFragment extends Fragment {
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddTaskDialogFragment addTaskDialogFragment = AddTaskDialogFragment.newInstance(getArguments().getInt(ARGS_COUNT_INT),getArguments().getString(ARGS_KEY_USER_ID));
+                AddTaskDialogFragment addTaskDialogFragment = AddTaskDialogFragment.newInstance(getArguments().getString(ARGS_TAB_STATES), getArguments().getString(ARGS_KEY_USER_ID));
                 addTaskDialogFragment.setTargetFragment(ListFragment.this, ADD_TASK_REQUEST_CODE);
                 addTaskDialogFragment.show(getFragmentManager(), "addTask");
 
@@ -125,15 +149,15 @@ public class ListFragment extends Fragment {
             updateUI();
         }
 
-        if (requestCode == SHOW_DETAIL_TASK_REQUEST_CODE){
+        if (requestCode == SHOW_DETAIL_TASK_REQUEST_CODE) {
 
             //getting the task from result of show detail dialog
             Task task = (Task) data.getSerializableExtra(ShowDetailDialogFragment.EXTRA_KEY_TASK_RESPONSE);
 
             //if state is null it mean task will be delete from repository
-            if (task.getStats() == null){
-                for (int i = 0; i < mTasksOfTab.size() ; i++) {
-                    if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
+            if (task.getStats() == null) {
+                for (int i = 0; i < mTasksOfTab.size(); i++) {
+                    if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()) {
                         Task task1 = mTasksOfTab.get(i);
                         mTasksOfTab.remove(task1);
                         mTaskRepository.delete(task1);
@@ -146,35 +170,18 @@ public class ListFragment extends Fragment {
             else {
                 for (int i = 0; i < mTasksOfTab.size(); i++) {
                     //find the response task from tasks of tab
-                    if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()){
+                    if (mTasksOfTab.get(i).getTaskID() == task.getTaskID()) {
 
                         //if response task state is equale with task of repository just update the ui
                         // else the state not equale the task in the mTaskOfTab will remove
-                        if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() == Stats.TODO){
+                        if (getArguments().getString(ARGS_TAB_STATES).equals(mTasksOfTab.get(i).getStats())) {
                             updateUI();
                             mTaskRepository.update(task);
-                        }else if (mTabPosition == 0 && mTasksOfTab.get(i).getStats() != Stats.TODO){
+                        } else {
                             mTasksOfTab.remove(i);
                             mTaskRepository.update(task);
                             updateUI();
                         }
-                        if (mTabPosition == 1 && mTasksOfTab.get(i).getStats() == Stats.DOING){
-                            updateUI();
-                            mTaskRepository.update(task);
-                        }else if (mTabPosition == 1 && mTasksOfTab.get(i).getStats() != Stats.DOING){
-                            mTasksOfTab.remove(i);
-                            mTaskRepository.update(task);
-                            updateUI();
-                        }
-                        if (mTabPosition == 2 && mTasksOfTab.get(i).getStats() == Stats.DONE){
-                            updateUI();
-                            mTaskRepository.update(task);
-                        }else if (mTabPosition == 2 && mTasksOfTab.get(i).getStats() != Stats.DONE){
-                            mTasksOfTab.remove(i);
-                            mTaskRepository.update(task);
-                            updateUI();
-                        }
-
                     }
                 }
             }
@@ -187,30 +194,48 @@ public class ListFragment extends Fragment {
         List<Task> tasks0 = new ArrayList<>();
         List<Task> tasks1 = new ArrayList<>();
         List<Task> tasks2 = new ArrayList<>();
-        if ( mTaskRepository.getList()!=null) {
-            for (int i = 0; i < mTaskRepository.getList().size(); i++) {
-                if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO") &&
-                        mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
-                    tasks0.add(mTaskRepository.getList().get(i));
+        if (!mUserId.equals("ADMIN")){
+            if (mTaskRepository.getList() != null) {
+                for (int i = 0; i < mTaskRepository.getList().size(); i++) {
+                    if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO") &&
+                            mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
+                        tasks0.add(mTaskRepository.getList().get(i));
+                    }
+                    if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING") &&
+                            mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
+                        tasks1.add(mTaskRepository.getList().get(i));
+                    }
+                    if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE") &&
+                            mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
+                        tasks2.add(mTaskRepository.getList().get(i));
+                    }
                 }
-                if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING") &&
-                        mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
-                    tasks1.add(mTaskRepository.getList().get(i));
-                }
-                if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE") &&
-                        mTaskRepository.getList().get(i).getUserID().equals(getArguments().getString(ARGS_KEY_USER_ID))) {
-                    tasks2.add(mTaskRepository.getList().get(i));
+            }
+        }else {
+            if (mTaskRepository.getList() != null) {
+                for (int i = 0; i < mTaskRepository.getList().size(); i++) {
+                    if (mTaskRepository.getList().get(i).getStats().toString().equals("TODO")) {
+                        tasks0.add(mTaskRepository.getList().get(i));
+                    }
+                    if (mTaskRepository.getList().get(i).getStats().toString().equals("DOING")) {
+                        tasks1.add(mTaskRepository.getList().get(i));
+                    }
+                    if (mTaskRepository.getList().get(i).getStats().toString().equals("DONE")) {
+                        tasks2.add(mTaskRepository.getList().get(i));
+                    }
                 }
             }
         }
-        if (getArguments().getInt(ARGS_COUNT_INT) == 0) {
-            mTasksOfTab=tasks0;
+
+
+        if (getArguments().getString(ARGS_TAB_STATES).equals("TODO")) {
+            mTasksOfTab = tasks0;
         }
-        if (getArguments().getInt(ARGS_COUNT_INT) == 1) {
-            mTasksOfTab=tasks1;
+        if (getArguments().getString(ARGS_TAB_STATES).equals("DOING")) {
+            mTasksOfTab = tasks1;
         }
-        if (getArguments().getInt(ARGS_COUNT_INT) == 2) {
-            mTasksOfTab=tasks2;
+        if (getArguments().getString(ARGS_TAB_STATES).equals("DONE")) {
+            mTasksOfTab = tasks2;
         }
 
     }
@@ -228,20 +253,27 @@ public class ListFragment extends Fragment {
         if (mTasksOfTab.size() == 0) {
             mTextViewWarning.setVisibility(View.VISIBLE);
         } else mTextViewWarning.setVisibility(View.GONE);
-        if (mNameAdapter==null){
+        if (mNameAdapter == null) {
             mNameAdapter = new NameAdapter(mTasksOfTab);
             mRecyclerView.setAdapter(mNameAdapter);
-        }else {
+        } else {
             mNameAdapter.notifyDataSetChanged();
         }
     }
 
-    private class NameHolder extends RecyclerView.ViewHolder {
+    private void clickSearchIcon() {
+        Intent intent = new Intent(getActivity(), SearchActivity.class);
+        intent.putExtra(EXTRA_KEY_USER_ID, getArguments().getString(ARGS_KEY_USER_ID));
+        startActivity(intent);
+    }
+
+    private class TaskHolder extends RecyclerView.ViewHolder {
 
         private TextView mTextViewName, mTextViewState, mTextViewDate, mTextViewTime;
         private ImageView mImageViewTask;
         private Task mTask;
-        public NameHolder(@NonNull View itemView) {
+
+        public TaskHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewName = itemView.findViewById(R.id.textView_name_list);
             mTextViewState = itemView.findViewById(R.id.textView_state);
@@ -252,16 +284,16 @@ public class ListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                  ShowDetailDialogFragment showDetailDialogFragment = ShowDetailDialogFragment.newInstance(mTask);
-                  showDetailDialogFragment.setTargetFragment(ListFragment.this , SHOW_DETAIL_TASK_REQUEST_CODE);
-                  showDetailDialogFragment.show(getFragmentManager(),"showDetailDialog");
+                    ShowDetailDialogFragment showDetailDialogFragment = ShowDetailDialogFragment.newInstance(mTask);
+                    showDetailDialogFragment.setTargetFragment(ListFragment.this, SHOW_DETAIL_TASK_REQUEST_CODE);
+                    showDetailDialogFragment.show(getFragmentManager(), "showDetailDialog");
                 }
             });
         }
 
         public void onBind(Task task) {
             mTask = task;
-            mTextViewName.setText(task.getName());
+            mTextViewName.setText(task.getTitle());
             mTextViewState.setText(task.getStats().toString());
 
             mTextViewDate.setText(ExtractingTime.formatDate(task.getDate()));
@@ -288,7 +320,7 @@ public class ListFragment extends Fragment {
         }
     }
 
-    private class NameAdapter extends RecyclerView.Adapter<NameHolder> {
+    private class NameAdapter extends RecyclerView.Adapter<TaskHolder> {
 
         List<Task> mTasks = new ArrayList<>();
 
@@ -298,23 +330,23 @@ public class ListFragment extends Fragment {
 
         @NonNull
         @Override
-        public NameHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public TaskHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.row_list, parent, false);
-            NameHolder nameHolder = new NameHolder(view);
-            return nameHolder;
+            TaskHolder taskHolder = new TaskHolder(view);
+            return taskHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull NameHolder holder, int position) {
+        public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
             Task task = mTasksOfTab.get(position);
-            if (getArguments().getInt(ARGS_COUNT_INT) == 0) {
+            if (getArguments().getString(ARGS_TAB_STATES).equals("TODO")) {
                 if (task.getStats().toString().equals("TODO"))
                     holder.onBind(task);
-            } else if (getArguments().getInt(ARGS_COUNT_INT) == 1) {
+            } else if (getArguments().getString(ARGS_TAB_STATES).equals("DOING")) {
                 if (task.getStats().toString().equals("DOING"))
                     holder.onBind(task);
-            } else if (getArguments().getInt(ARGS_COUNT_INT) == 2) {
+            } else if (getArguments().getString(ARGS_TAB_STATES).equals("DONE")) {
                 if (task.getStats().toString().equals("DONE"))
                     holder.onBind(task);
             }
@@ -325,4 +357,6 @@ public class ListFragment extends Fragment {
             return mTasksOfTab.size();
         }
     }
+
+
 }
