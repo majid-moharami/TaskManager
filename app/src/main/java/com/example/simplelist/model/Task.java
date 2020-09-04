@@ -150,4 +150,7 @@ public class Task implements Serializable {
     }
 
 
+    public String getPhotoFileName(){
+        return "IMG_"+getTaskID()+".jpg";
+    }
 }

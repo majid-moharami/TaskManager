@@ -12,4 +12,9 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add_task">Add Task</string>
+    <string name="share_task">Title : %1$s,
+              Description : %2$s,
+              Date : %3$s,
+              Time : %4$s.
+    </string>
 </resources>

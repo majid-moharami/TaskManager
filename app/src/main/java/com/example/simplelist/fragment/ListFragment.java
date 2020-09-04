@@ -3,6 +3,7 @@ package com.example.simplelist.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,14 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.simplelist.R;
 import com.example.simplelist.controller.SearchActivity;
 import com.example.simplelist.model.Task;
 import com.example.simplelist.repository.TaskDBRepository;
 import com.example.simplelist.utils.ExtractingTime;
+import com.example.simplelist.utils.PhotoScale;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +44,7 @@ public class ListFragment extends Fragment {
     public static final int SHOW_DETAIL_TASK_REQUEST_CODE = 1;
     public static final String ARGS_KEY_USER_ID = "userId";
     public static final String EXTRA_KEY_USER_ID = "userID";
+    public static final int REQUEST_CODE_SHOW_PHOTO_DIALOG = 2;
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton mButtonAdd;
@@ -166,7 +171,6 @@ public class ListFragment extends Fragment {
                     }
                 }
             }
-            //
             else {
                 for (int i = 0; i < mTasksOfTab.size(); i++) {
                     //find the response task from tasks of tab
@@ -175,8 +179,8 @@ public class ListFragment extends Fragment {
                         //if response task state is equale with task of repository just update the ui
                         // else the state not equale the task in the mTaskOfTab will remove
                         if (getArguments().getString(ARGS_TAB_STATES).equals(mTasksOfTab.get(i).getStats())) {
-                            updateUI();
                             mTaskRepository.update(task);
+                            updateUI();
                         } else {
                             mTasksOfTab.remove(i);
                             mTaskRepository.update(task);
@@ -185,7 +189,9 @@ public class ListFragment extends Fragment {
                     }
                 }
             }
-
+        }
+        if (requestCode==REQUEST_CODE_SHOW_PHOTO_DIALOG){
+            updateUI();
         }
     }
 
@@ -226,8 +232,6 @@ public class ListFragment extends Fragment {
                 }
             }
         }
-
-
         if (getArguments().getString(ARGS_TAB_STATES).equals("TODO")) {
             mTasksOfTab = tasks0;
         }
@@ -250,6 +254,7 @@ public class ListFragment extends Fragment {
     }
 
     private void updateUI() {
+        //mTasksOfTab = mTaskRepository.getList();
         if (mTasksOfTab.size() == 0) {
             mTextViewWarning.setVisibility(View.VISIBLE);
         } else mTextViewWarning.setVisibility(View.GONE);
@@ -257,6 +262,7 @@ public class ListFragment extends Fragment {
             mNameAdapter = new NameAdapter(mTasksOfTab);
             mRecyclerView.setAdapter(mNameAdapter);
         } else {
+            mNameAdapter.setTasks(mTasksOfTab);
             mNameAdapter.notifyDataSetChanged();
         }
     }
@@ -289,6 +295,14 @@ public class ListFragment extends Fragment {
                     showDetailDialogFragment.show(getFragmentManager(), "showDetailDialog");
                 }
             });
+            mImageViewTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShowPhotoDialogFragment showPhotoDialogFragment = ShowPhotoDialogFragment.newInstance(mTask.getTaskID().toString());
+                    showPhotoDialogFragment.setTargetFragment(ListFragment.this, REQUEST_CODE_SHOW_PHOTO_DIALOG);
+                    showPhotoDialogFragment.show(getFragmentManager() , "showPhotoDialog");
+                }
+            });
         }
 
         public void onBind(Task task) {
@@ -299,12 +313,23 @@ public class ListFragment extends Fragment {
             mTextViewDate.setText(ExtractingTime.formatDate(task.getDate()));
             mTextViewTime.setText(ExtractingTime.formatTime(task.getDate()));
 
-            if (task.getStats().toString() == "TODO")
-                mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
-            if (task.getStats().toString() == "DOING")
-                mImageViewTask.setImageResource(R.mipmap.ic_launcher_doing_image_asset_foreground);
-            if (task.getStats().toString() == "DONE")
-                mImageViewTask.setImageResource(R.mipmap.ic_launcher_done_image_asset_foreground);
+            File photoFile = mTaskRepository.getPhotoFile(getActivity(),mTask);
+            if (photoFile!=null && photoFile.exists()){
+                Bitmap bitmap = PhotoScale.getScaledBitmap(photoFile.getPath(), getActivity());
+                mImageViewTask.setImageBitmap(bitmap);
+            }
+            else{
+                if (task.getStats().toString().equals("TODO"))
+                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
+
+                if (task.getStats().toString().equals("DOING"))
+                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_doing_image_asset_foreground);
+
+                if (task.getStats().toString().equals("DONE"))
+                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_done_image_asset_foreground);
+            }
+
+
 
 
             int orientation = getResources().getConfiguration().orientation;
@@ -323,6 +348,10 @@ public class ListFragment extends Fragment {
     private class NameAdapter extends RecyclerView.Adapter<TaskHolder> {
 
         List<Task> mTasks = new ArrayList<>();
+
+        public void setTasks(List<Task> tasks) {
+            mTasks = tasks;
+        }
 
         public NameAdapter(List<Task> tasks) {
             mTasks = tasks;
@@ -357,6 +386,5 @@ public class ListFragment extends Fragment {
             return mTasksOfTab.size();
         }
     }
-
 
 }

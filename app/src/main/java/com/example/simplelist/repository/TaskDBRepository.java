@@ -7,6 +7,7 @@ import androidx.room.Room;
 import com.example.simplelist.database.TaskManagerDatabase;
 import com.example.simplelist.model.Task;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,6 +61,10 @@ public class TaskDBRepository implements IRepository<Task>  {
 
     public void delete(Task task){
         mDatabase.taskDao().delete(task);
+    }
+
+    public File getPhotoFile(Context context  , Task task){
+        return new File(context.getFilesDir(),task.getPhotoFileName());
     }
 //
 //    private ContentValues getTaskContentValues(Task task){

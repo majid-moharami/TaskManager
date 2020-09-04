@@ -10,20 +10,38 @@
     android:layout_marginEnd="8dp"
     android:background="#2F4660">
 
-    <ImageView
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView_task"-->
+<!--        android:layout_width="47dp"-->
+<!--        android:layout_height="62dp"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.023"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.0"-->
+<!--        app:srcCompat="@mipmap/ic_launcher_todo_image_asset_foreground" />-->
+
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView_task"
-        android:layout_width="47dp"
-        android:layout_height="62dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:src="@drawable/ic_launcher_background"
+        app:civ_border_color="#2F4660"
+        app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/ic_launcher_todo_image_asset_foreground" />
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView_name_list"

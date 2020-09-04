@@ -13,11 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import com.example.simplelist.R;
 import com.example.simplelist.Stats;
 import com.example.simplelist.model.Task;
+import com.example.simplelist.utils.ExtractingTime;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -35,10 +37,12 @@ public class ShowDetailDialogFragment extends DialogFragment {
     public static final String DATE_DIALOG_FRAGMENT_TAG = "dateDialog_show_detail";
     public static final String TIME_PICKER_DIALOG_FRAGMENT_TAG = "timeDialog_show_detail";
     private Task mTask;
-    private Button mButtonSave,mButtonEdit,mButtonDelete,mButtonDate , mButtonTime;
-    private EditText mEditTextTitle ,mEditTextDescription;
-    private RadioButton mRadioButtonTODO,mRadioButtonDONE,mRadioButtonDOING;
-    private TextInputLayout mTextInputLayoutTitle,mTextInputLayoutDescription;
+    private Button mButtonSave, mButtonEdit, mButtonDelete, mButtonDate, mButtonTime;
+    private ImageView mImageViewShare;
+    private EditText mEditTextTitle, mEditTextDescription;
+    private RadioButton mRadioButtonTODO, mRadioButtonDONE, mRadioButtonDOING;
+    private TextInputLayout mTextInputLayoutTitle, mTextInputLayoutDescription;
+
     public ShowDetailDialogFragment() {
         // Required empty public constructor
     }
@@ -47,7 +51,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
     public static ShowDetailDialogFragment newInstance(Task task) {
         ShowDetailDialogFragment fragment = new ShowDetailDialogFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARGUMENT_KEY_GET_TASK,task);
+        args.putSerializable(ARGUMENT_KEY_GET_TASK, task);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +66,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_show_detials_dialog, null);
+        View view = inflater.inflate(R.layout.fragment_show_detials_dialog, null);
         findViews(view);
         initDialog();
         setListeners();
@@ -76,7 +80,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
             return;
 
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
-            mTask.setDate( (Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE));
+            mTask.setDate((Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE));
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
             String date = format.format(mTask.getDate());
@@ -85,8 +89,8 @@ public class ShowDetailDialogFragment extends DialogFragment {
             mButtonTime.setText(time);
         }
 
-        if (requestCode == REQUEST_CODE_TIME_PICKER){
-            mTask.setDate( (Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE));
+        if (requestCode == REQUEST_CODE_TIME_PICKER) {
+            mTask.setDate((Date) data.getSerializableExtra(DatePickerDialogFragment.EXTRA_DATE_RESPONSE));
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
             String date = format.format(mTask.getDate());
@@ -107,9 +111,10 @@ public class ShowDetailDialogFragment extends DialogFragment {
         mRadioButtonTODO = view.findViewById(R.id.radioButton_TODO);
         mRadioButtonDOING = view.findViewById(R.id.radioButton_DOING);
         mRadioButtonDONE = view.findViewById(R.id.radioButton_DONE);
+        mImageViewShare = view.findViewById(R.id.imageView_share);
     }
 
-    private void initDialog(){
+    private void initDialog() {
         mEditTextTitle.setText(mTask.getTitle());
         mEditTextDescription.setText(mTask.getDescription());
         if (mTask.getStats().toString().equals("TODO"))
@@ -128,7 +133,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
         mButtonDate.setText(date);
         mButtonTime.setText(time);
 
-       isClickableDetail(false);
+        isClickableDetail(false);
     }
 
     private void isClickableDetail(boolean b) {
@@ -141,7 +146,7 @@ public class ShowDetailDialogFragment extends DialogFragment {
         mRadioButtonDONE.setEnabled(b);
     }
 
-    private void setListeners(){
+    private void setListeners() {
         mButtonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,8 +184,8 @@ public class ShowDetailDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 DatePickerDialogFragment datePickerDialogFragment = DatePickerDialogFragment.newInstance(mTask.getDate());
-                datePickerDialogFragment.setTargetFragment(ShowDetailDialogFragment.this , REQUEST_CODE_DATE_PICKER);
-                datePickerDialogFragment.show(getFragmentManager() , DATE_DIALOG_FRAGMENT_TAG);
+                datePickerDialogFragment.setTargetFragment(ShowDetailDialogFragment.this, REQUEST_CODE_DATE_PICKER);
+                datePickerDialogFragment.show(getFragmentManager(), DATE_DIALOG_FRAGMENT_TAG);
             }
         });
 
@@ -189,16 +194,35 @@ public class ShowDetailDialogFragment extends DialogFragment {
             public void onClick(View v) {
                 TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(mTask.getDate());
                 timePickerDialogFragment.setTargetFragment(ShowDetailDialogFragment.this, REQUEST_CODE_TIME_PICKER);
-                timePickerDialogFragment.show(getFragmentManager() , TIME_PICKER_DIALOG_FRAGMENT_TAG);
+                timePickerDialogFragment.show(getFragmentManager(), TIME_PICKER_DIALOG_FRAGMENT_TAG);
+            }
+        });
+
+        mImageViewShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = getString(R.string.share_task,
+                        mTask.getTitle(),
+                        mTask.getDescription(),
+                        ExtractingTime.formatDate(mTask.getDate()),
+                        ExtractingTime.formatTime(mTask.getDate()));
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT , "Task Detail");
+                sendIntent.putExtra(Intent.EXTRA_TEXT , text);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent , null);
+                if (sendIntent.resolveActivity(getActivity().getPackageManager())!=null)
+                    startActivity(shareIntent);
             }
         });
 
     }
 
-    private void setResult(Task task){
+    private void setResult(Task task) {
         Fragment fragment = getTargetFragment();
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_KEY_TASK_RESPONSE,task);
-        fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,intent);
+        intent.putExtra(EXTRA_KEY_TASK_RESPONSE, task);
+        fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 }
