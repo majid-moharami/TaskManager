@@ -70,9 +70,7 @@ public class ShowPhotoDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_show_photo_dialog,null);
         findViews(view);
         allListener();
-        if (mFilePhoto==null || !mFilePhoto.exists()){
-            mImageViewPhoto.setImageResource(R.mipmap.ic_launcher_add_image2_foreground);
-        }else updateImageView();
+        updateImageView();
         return view;
     }
 
@@ -114,7 +112,8 @@ public class ShowPhotoDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 mFilePhoto.delete();
-                dismiss();
+                updateImageView();
+                setResult();
             }
         });
     }
@@ -178,7 +177,10 @@ public class ShowPhotoDialogFragment extends DialogFragment {
     }
 
     private void updateImageView(){
-        if (mFilePhoto!=null){
+        if (mFilePhoto==null || !mFilePhoto.exists()){
+            mImageViewPhoto.setImageResource(R.mipmap.ic_launcher_add_image2_foreground);
+        }
+        else {
             mImageViewPhoto.setVisibility(View.VISIBLE);
             Bitmap bitmap = PhotoScale.getScaledBitmap(mFilePhoto.getPath(), getActivity());
             mImageViewPhoto.setImageBitmap(bitmap);

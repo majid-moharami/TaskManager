@@ -254,7 +254,6 @@ public class ListFragment extends Fragment {
     }
 
     private void updateUI() {
-        //mTasksOfTab = mTaskRepository.getList();
         if (mTasksOfTab.size() == 0) {
             mTextViewWarning.setVisibility(View.VISIBLE);
         } else mTextViewWarning.setVisibility(View.GONE);
