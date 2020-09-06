@@ -25,13 +25,11 @@ public class TabListActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private Toolbar mToolbar;
     private FloatingActionButton mActionButtonAdd;
-    public static final String EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY = "com.example.nameStringForTabList";
     public static final String EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY = "com.example.userIDForTabList";
 
 
     public static Intent newIntent(Context context,  String userID) {
         Intent intent = new Intent(context, TabListActivity.class);
-        //intent.putExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY, name);
         intent.putExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY, userID);
         return intent;
     }
@@ -40,10 +38,6 @@ public class TabListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_list);
-//        String name = getIntent().getStringExtra(EXTRA_KEY_NAME_STRING_TAB_LIST_ACTIVITY);
-//        int n = getIntent().getIntExtra(EXTRA_KEY_USER_ID_FOR_TAB_LIST_ACTIVITY, 0);
-
-        //it make first instance of repository
         findViews();
         setSupportActionBar(mToolbar);
         createViewPager();

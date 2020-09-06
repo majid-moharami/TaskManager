@@ -254,6 +254,7 @@ public class ListFragment extends Fragment {
     }
 
     private void updateUI() {
+        fillListOfTab();
         if (mTasksOfTab.size() == 0) {
             mTextViewWarning.setVisibility(View.VISIBLE);
         } else mTextViewWarning.setVisibility(View.GONE);
