@@ -56,7 +56,7 @@ public class UsersFragment extends Fragment {
         findViews(view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
-        deleteTodoItem();
+        deleteItem();
         return  view ;
     }
 
@@ -73,7 +73,8 @@ public class UsersFragment extends Fragment {
             mUserAdapter.notifyDataSetChanged();
         }
     }
-    private void deleteTodoItem() {
+
+    private void deleteItem() {
         //Swipe to delete currentTodo Item
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -90,8 +91,7 @@ public class UsersFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                mUserAdapter.deleteCurrentTodoItem(position);
-                // showMySnackBar("Todo deleted");
+                mUserAdapter.deleteCurrentItem(position);
             }
 
             @Override
@@ -176,7 +176,7 @@ public class UsersFragment extends Fragment {
             return mUsers.size();
         }
 
-        public void deleteCurrentTodoItem(int position) {
+        public void deleteCurrentItem(int position) {
             User user = mUsers.get(position);
             mRepository.delete(user);
             List<Task> tasks  =mTaskDBRepository.getList();

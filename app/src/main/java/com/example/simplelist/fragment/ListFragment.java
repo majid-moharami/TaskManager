@@ -275,7 +275,7 @@ public class ListFragment extends Fragment {
 
     private class TaskHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTextViewName, mTextViewState, mTextViewDate, mTextViewTime;
+        private TextView mTextViewName, mTextViewState, mTextViewDate, mTextViewTime,mTextViewWord;
         private ImageView mImageViewTask;
         private Task mTask;
 
@@ -286,6 +286,7 @@ public class ListFragment extends Fragment {
             mImageViewTask = itemView.findViewById(R.id.imageView_task);
             mTextViewDate = itemView.findViewById(R.id.textView_date);
             mTextViewTime = itemView.findViewById(R.id.textView_time);
+            mTextViewWord = itemView.findViewById(R.id.textView_fist_word);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -316,18 +317,23 @@ public class ListFragment extends Fragment {
             File photoFile = mTaskRepository.getPhotoFile(getActivity(),mTask);
 
             if (photoFile!=null && photoFile.exists()){
+                mTextViewWord.setVisibility(View.INVISIBLE);
                 Bitmap bitmap = PhotoScale.getScaledBitmap(photoFile.getPath(), getActivity());
                 mImageViewTask.setImageBitmap(bitmap);
             }
             else{
-                if (task.getStats().toString().equals("TODO"))
-                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
-
-                if (task.getStats().toString().equals("DOING"))
-                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_doing_image_asset_foreground);
-
-                if (task.getStats().toString().equals("DONE"))
-                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_done_image_asset_foreground);
+//                if (task.getStats().toString().equals("TODO"))
+//                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
+//
+//                if (task.getStats().toString().equals("DOING"))
+//                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_doing_image_asset_foreground);
+//
+//                if (task.getStats().toString().equals("DONE"))
+//                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_done_image_asset_foreground);
+                mTextViewWord.setVisibility(View.VISIBLE);
+                if (!mTask.getTitle().equals("")) {
+                    mTextViewWord.setText(mTask.getTitle().substring(0,1).toUpperCase());
+                }else mTextViewWord.setText("");
             }
 
 
