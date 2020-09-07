@@ -16,8 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.simplelist.R;
+import com.example.simplelist.controller.LoginActivity;
 import com.example.simplelist.controller.SignUpActivity;
 import com.example.simplelist.controller.TabListActivity;
+import com.example.simplelist.controller.UsersActivity;
 import com.example.simplelist.model.User;
 import com.example.simplelist.repository.UserDBRepository;
 
@@ -94,8 +96,9 @@ public class LoginFragment extends Fragment {
         mButtonAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = TabListActivity.newIntent(getActivity(),"ADMIN");
-                startActivity(intent);
+//                Intent intent = TabListActivity.newIntent(getActivity(),"ADMIN");
+//                startActivity(intent);
+             startActivity(UsersActivity.newIntent(getActivity()));
             }
         });
 

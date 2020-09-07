@@ -314,6 +314,7 @@ public class ListFragment extends Fragment {
             mTextViewTime.setText(ExtractingTime.formatTime(task.getDate()));
 
             File photoFile = mTaskRepository.getPhotoFile(getActivity(),mTask);
+
             if (photoFile!=null && photoFile.exists()){
                 Bitmap bitmap = PhotoScale.getScaledBitmap(photoFile.getPath(), getActivity());
                 mImageViewTask.setImageBitmap(bitmap);
