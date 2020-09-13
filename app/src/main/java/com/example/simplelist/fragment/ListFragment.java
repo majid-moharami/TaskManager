@@ -30,6 +30,7 @@ import com.example.simplelist.repository.TaskDBRepository;
 import com.example.simplelist.utils.ExtractingTime;
 import com.example.simplelist.utils.PhotoScale;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class ListFragment extends Fragment {
     public static final String EXTRA_KEY_USER_ID = "userID";
     public static final int REQUEST_CODE_SHOW_PHOTO_DIALOG = 2;
 
-    private RecyclerView mRecyclerView;
+    private FastScrollRecyclerView mRecyclerView;
     private FloatingActionButton mButtonAdd;
     private TextView mTextViewWarning;
     private int mTabPosition;
@@ -322,14 +323,7 @@ public class ListFragment extends Fragment {
                 mImageViewTask.setImageBitmap(bitmap);
             }
             else{
-//                if (task.getStats().toString().equals("TODO"))
-//                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_todo_image_asset1_foreground);
-//
-//                if (task.getStats().toString().equals("DOING"))
-//                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_doing_image_asset_foreground);
-//
-//                if (task.getStats().toString().equals("DONE"))
-//                    mImageViewTask.setImageResource(R.mipmap.ic_launcher_done_image_asset_foreground);
+
                 mTextViewWord.setVisibility(View.VISIBLE);
                 if (!mTask.getTitle().equals("")) {
                     mTextViewWord.setText(mTask.getTitle().substring(0,1).toUpperCase());
